@@ -1,6 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
+
+const Listing = require('./models/listing');
 
 const requestLogger = (req, res, next) => {
   console.log('Method:', req.method);
@@ -14,80 +17,71 @@ const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'unknown endpoint' });
 };
 
-app.use(express.json());
-app.use(cors);
-app.use(requestLogger);
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message);
 
-let listings = [
-  {
-    id: 1,
-    name: 'doc1',
-    address: 'address1',
-    description: 'desc1',
-    website: 'site1',
-    phone: 'num1'
-  },
-  {
-    id: 2,
-    name: 'doc2',
-    address: 'address2',
-    description: 'desc2',
-    website: 'site2',
-    phone: 'num2'
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' });
   }
-];
 
-const generateId = () => {
-  const maxId = listings.length > 0
-    ? Math.max(...listings.map(l => l.id))
-    : 0
-  return maxId + 1;
+  next(error);
 };
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello world</h1>');
-});
+app.use(express.json());
+app.use(cors());
+app.use(requestLogger);
 
 app.get('/api/listings', (req, res) => {
-  res.json(listings);
+  Listing.find({}).then(listings => res.json(listings));
 });
 
-app.get('/api/listings/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const listing = listings.find(l => l.id === id);
-  
-  if (listing) {
-    res.json(listing);
-  } else {
-    res.status(404).end();
-  }
+app.get('/api/listings/:id', (req, res, next) => {
+  Listing.findById(req.params.id).then(listing => {
+    if (listing) {
+      res.json(listing);
+    } else {
+      res.status(404).end();
+    }
+  })
+  .catch(error => {
+    console.log(error);
+    next(error);
+  });
 });
 
-app.delete('/api/listings/:id', (req, res) => {
-  const id = Number(req.params.id);
-  listings = listings.filter(l => l.id !== id);
-
-  res.status(204).end();
+app.delete('/api/listings/:id', (req, res, next) => {
+  Listing.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end();
+    })
+    .catch(error => next(error));
 });
 
 app.post('/api/listings', (req, res) => {
   const body = req.body;
-  console.log(body);
 
-  if (!body.name) {
-    return res.status(400).json({
-      error: 'content missing'
-    });
+  if (body.name === undefined) {
+    return res.status(400).json({ error: 'content missing' });
   }
 
-  const listing = { id: generateId(), ...body };
+  const listing = new Listing(body);
 
-  listings = listings.concat(listing);
+  listing.save().then(savedListing => {
+    res.json(savedListing);
+  });
+});
 
-  res.json(listing);
+app.put('/api/listings/:id', (req, res, next) => {
+
+  Listing.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    .then(updatedListing => {
+      res.json(updatedListing);
+    })
+    .catch(error => next(error));
 });
 
 app.use(unknownEndpoint);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

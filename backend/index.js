@@ -1,7 +1,22 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 
+const requestLogger = (req, res, next) => {
+  console.log('Method:', req.method);
+  console.log('Path:', req.path);
+  console.log('Body:', req.body);
+  console.log('---');
+  next();
+};
+
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' });
+};
+
 app.use(express.json());
+app.use(cors);
+app.use(requestLogger);
 
 let listings = [
   {
@@ -72,7 +87,9 @@ app.post('/api/listings', (req, res) => {
   res.json(listing);
 });
 
-const PORT = 3001;
+app.use(unknownEndpoint);
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

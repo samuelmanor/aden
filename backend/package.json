@@ -1,0 +1,20 @@
+{
+  "name": "aden-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuelmanor/aden.git"
+  },
+  "author": "Samuel Manor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuelmanor/aden/issues"
+  },
+  "homepage": "https://github.com/samuelmanor/aden#readme"
+}

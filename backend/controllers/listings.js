@@ -1,40 +1,35 @@
 const listingsRouter = require('express').Router();
 const Listing = require('../models/listing');
 
-listingsRouter.get('/', (req, res) => {
-	Listing.find({}).then(listings => res.json(listings));
+listingsRouter.get('/', async (req, res) => {
+	const listings = await Listing.find({});
+	res.json(listings);
 });
 
-listingsRouter.get('/:id', (req, res, next) => {
-	Listing.findById(req.params.id).then(listing => {
-		if (listing) {
-			res.json(listing);
-		} else {
-			res.status(404).end();
-		}
-	})
-		.catch(error => {
-			console.log(error);
-			next(error);
-		});
-});
+listingsRouter.get('/:id', async (req, res, next) => {
+	const listing = await Listing.findById(req.params.id);
 
-listingsRouter.post('/', (req, res) => {
-	const body = req.body;
-
-	if (body.name === undefined) {
-		return res.status(400).json({ error: 'content missing' });
+	if (listing) {
+		res.json(listing);
+	} else {
+		res.status(404).end();
 	}
+});
+
+listingsRouter.post('/', async (req, res, next) => {
+	const body = req.body;
 
 	const listing = new Listing(body);
 
-	listing.save().then(savedListing => {
-		res.json(savedListing);
-	});
+	try {
+    const savedListing = await listing.save();
+    res.status(201).json(savedListing);
+  } catch (exception) {
+    next(exception)
+  }
 });
 
-listingsRouter.put('/:id', (req, res, next) => {
-
+listingsRouter.put('/:id', async (req, res, next) => {
 	Listing.findByIdAndUpdate(req.params.id, req.body, { new: true })
 		.then(updatedListing => {
 			res.json(updatedListing);
@@ -42,12 +37,9 @@ listingsRouter.put('/:id', (req, res, next) => {
 		.catch(error => next(error));
 });
 
-listingsRouter.delete('/:id', (req, res, next) => {
-	Listing.findByIdAndRemove(req.params.id)
-		.then(result => {
-			res.status(204).end();
-		})
-		.catch(error => next(error));
+listingsRouter.delete('/:id', async (req, res, next) => {
+	await Listing.findByIdAndRemove(req.params.id);
+	res.status(204).end();
 });
 
 module.exports = listingsRouter;

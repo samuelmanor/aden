@@ -5,7 +5,7 @@ const app = require('../app');
 const api = supertest(app);
 
 const Listing = require('../models/listing');
-const helper = require('./listing_helper');
+const helper = require('./test_helper');
 
 beforeEach(async () => {
 	await Listing.deleteMany({});

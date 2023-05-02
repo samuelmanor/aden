@@ -8,13 +8,13 @@ const Listing = require('../models/listing');
 const helper = require('./listing_helper');
 
 beforeEach(async () => {
-	await Listing.deleteMany({});
+  await Listing.deleteMany({});
 
-	let listingObj = new Listing(helper.initialListings[0]);
-	await listingObj.save();
+  const listingObjects = helper.initialListings
+    .map(l => new Listing(l));
 
-	listingObj = new Listing(helper.initialListings[1]);
-	await listingObj.save();
+  const promiseArray = listingObjects.map(l => l.save());
+  await Promise.all(promiseArray);
 });
 
 describe('when there are initially some listings saved', () => {
@@ -38,8 +38,10 @@ describe('when there are initially some listings saved', () => {
 
 		expect(descriptions).toContain('desc2');
 	});
+});
 
-	test('a specific listing can be viewed', async () => {
+describe('viewing a specific listing', () => {
+	test('succeeds with a valid id', async () => {
 		const listingsAtStart = await helper.listingsInDb();
 
 		const listingToView = listingsAtStart[0];
@@ -52,21 +54,24 @@ describe('when there are initially some listings saved', () => {
 		expect(resultListing.body).toEqual(listingToView);
 	});
 
-	test('a listing can be deleted', async () => {
-		const listingsAtStart = await helper.listingsInDb();
-		const listingToDelete = listingsAtStart[0];
+  test('fails with statuscode 404 if listing does not exist', async () => {
+    const validNonexistingId = await helper.nonExistingId();
 
-		await api
-			.delete(`/api/listings/${listingToDelete.id}`)
-			.expect(204);
+    await api
+      .get(`/api/listings/${validNonexistingId}`)
+      .expect(404);
+  });
 
-		const listingsAtEnd = await helper.listingsInDb();
+  test('fails with statuscode 400 if id is invalid', async () => {
+    const invalidId = 'dshljahflasjh';
 
-		expect(listingsAtEnd).toHaveLength(helper.initialListings.length - 1);
-	});
+    await api
+      .get(`/api/listings/${invalidId}`)
+      .expect(400);
+  });
 });
 
-describe('adding a new listing', () => {
+describe('addition of a new listing', () => {
 	test('a valid listing can be added', async () => {
 		const newListing = {
 			name: 'doc3',
@@ -89,8 +94,8 @@ describe('adding a new listing', () => {
 		expect(descriptions).toContain('desc3');
 	});
 
-	test('an invalid listing cannot be added', async () => {
-		const newListing = {
+  test('fails with statuscode 400 if data is invalid', async () => {
+    const newListing = {
 			address: 'add3',
 			description: 'desc3'
 		};
@@ -103,9 +108,28 @@ describe('adding a new listing', () => {
 		const listingsAtEnd = await helper.listingsInDb();
 
 		expect(listingsAtEnd).toHaveLength(helper.initialListings.length);
-	});
+  });
+});
+
+describe('deletion of a listing', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const listingsAtStart = await helper.listingsInDb();
+    const listingToDelete = listingsAtStart[0];
+
+    await api
+      .delete(`/api/listings/${listingToDelete.id}`)
+      .expect(204);
+
+    const listingsAtEnd = await helper.listingsInDb();
+
+    expect(listingsAtEnd).toHaveLength(helper.initialListings.length - 1);
+
+    const descriptions = listingsAtEnd.map(l => l.description);
+
+    expect(descriptions).not.toContain(listingToDelete.description);
+  });
 });
 
 afterAll(async () => {
-	await mongoose.connection.close();
+  await mongoose.connection.close();
 });

@@ -7,13 +7,13 @@ listingsRouter.get('/', async (req, res) => {
 });
 
 listingsRouter.get('/:id', async (req, res, next) => {
-	const listing = await Listing.findById(req.params.id);
-
-	if (listing) {
-		res.json(listing);
-	} else {
-		res.status(404).end();
-	}
+  const listing = await Listing.findById(req.params.id);
+  
+  if (listing) {
+    res.json(listing);
+  } else {
+    res.status(404).end();
+  }
 });
 
 listingsRouter.post('/', async (req, res, next) => {
@@ -21,12 +21,8 @@ listingsRouter.post('/', async (req, res, next) => {
 
 	const listing = new Listing(body);
 
-	try {
-    const savedListing = await listing.save();
-    res.status(201).json(savedListing);
-  } catch (exception) {
-    next(exception)
-  }
+  const savedListing = await listing.save();
+  res.status(201).json(savedListing);
 });
 
 listingsRouter.put('/:id', async (req, res, next) => {
@@ -38,8 +34,8 @@ listingsRouter.put('/:id', async (req, res, next) => {
 });
 
 listingsRouter.delete('/:id', async (req, res, next) => {
-	await Listing.findByIdAndRemove(req.params.id);
-	res.status(204).end();
+  await Listing.findByIdAndRemove(req.params.id);
+  res.status(204).end();
 });
 
 module.exports = listingsRouter;

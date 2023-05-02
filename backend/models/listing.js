@@ -8,7 +8,13 @@ const listingSchema = new mongoose.Schema({
 	address: String,
 	description: String,
 	website: String,
-	phone: String
+	phone: String,
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment'
+    }
+  ]
 });
 
 listingSchema.set('toJSON', {

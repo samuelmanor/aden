@@ -1,5 +1,6 @@
 const listingsRouter = require('express').Router();
 const Listing = require('../models/listing');
+const Comment = require('../models/comment');
 
 listingsRouter.get('/', async (req, res) => {
 	const listings = await Listing.find({});
@@ -33,9 +34,15 @@ listingsRouter.put('/:id', async (req, res, next) => {
 		.catch(error => next(error));
 });
 
-listingsRouter.delete('/:id', async (req, res, next) => {
-	await Listing.findByIdAndRemove(req.params.id);
-	res.status(204).end();
+listingsRouter.delete('/:id', async (req, res) => {
+  const delComment = async (id) => {
+    await Comment.findByIdAndRemove(id);
+  };
+
+  const listing = await Listing.findById(req.params.id);
+  listing.comments.forEach(c => delComment(c._id));
+
+  await Listing.findByIdAndRemove(req.params.id);
 });
 
 module.exports = listingsRouter;

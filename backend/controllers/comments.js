@@ -39,9 +39,18 @@ commentsRouter.put('/:id', async (req, res, next) => {
     .catch(error => next(error));
 });
 
-commentsRouter.delete('/:id', async (req, res, next) => {
+commentsRouter.delete('/:id', async (req, res, next) => { // in body: listingId, userId
+  const comment = await Comment.findById(req.params.id);
+  const user = await User.findById(req.body.userId);
+  const listing = await Listing.findById(req.body.listingId);
+
+  user.comments = user.comments.filter(c => c._id.toString() !== comment._id.toString());
+  listing.comments = listing.comments.filter(l => l._id.toString() !== comment._id.toString());
+
+  await user.save();
+  await listing.save();
+
   await Comment.findByIdAndRemove(req.params.id);
-  res.status(204);
 });
 
 module.exports = commentsRouter;

@@ -25,4 +25,6 @@ listingSchema.set('toJSON', {
 	}
 });
 
-module.exports = mongoose.model('Listing', listingSchema);
+const Listing = mongoose.model('Listing', listingSchema);
+
+module.exports = Listing;

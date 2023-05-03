@@ -3,12 +3,12 @@ const Comment = require('../models/comment');
 const User = require('../models/user');
 const Listing = require('../models/listing');
 
-commentsRouter.get('/', async (req, res) => {
-  const comments = await Comment.find({});
-  res.json(comments);
-});
+// commentsRouter.get('/', async (req, res) => { // not needed
+//   const comments = await Comment.find({}).populate('user', { username: 1, name: 1 });
+//   res.json(comments);
+// });
 
-commentsRouter.post('/', async (req, res, next) => { // listing ?
+commentsRouter.post('/', async (req, res, next) => {
   const body = req.body;
 
   const user = await User.findById(body.userId);
@@ -23,9 +23,12 @@ commentsRouter.post('/', async (req, res, next) => { // listing ?
   const savedComment = await comment.save();
 
   user.comments = user.comments.concat(savedComment._id);
+  await user.save();
+
   listing.comments = listing.comments.concat(savedComment._id);
-  
-  res.status(201).json(savedComment);
+  await listing.save();
+
+  res.json(savedComment);
 });
 
 commentsRouter.put('/:id', async (req, res, next) => {

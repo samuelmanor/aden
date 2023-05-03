@@ -7,7 +7,7 @@ listingsRouter.get('/', async (req, res) => {
 });
 
 listingsRouter.get('/:id', async (req, res, next) => {
-	const listing = await Listing.findById(req.params.id);
+	const listing = await Listing.findById(req.params.id).populate('comments', { content: 1, user: 1 });
 
 	if (listing) {
 		res.json(listing);

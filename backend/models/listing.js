@@ -17,11 +17,6 @@ const listingSchema = new mongoose.Schema({
   ]
 });
 
-// listingSchema.pre('deleteMany', function() {
-//   // let listing = this;
-//   // listing.model('Comment').deleteOne({ comment: comment._id });
-// });
-
 listingSchema.set('toJSON', {
 	transform: (document, returnedObject) => {
 		returnedObject.id = returnedObject._id.toString();

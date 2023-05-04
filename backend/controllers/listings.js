@@ -1,6 +1,16 @@
 const listingsRouter = require('express').Router();
 const Listing = require('../models/listing');
 const Comment = require('../models/comment');
+const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+
+const getTokenFrom = req => {
+	const auth = req.get('authorization');
+	if (auth && auth.startsWith('Bearer ')) {
+		return auth.replace('Bearer ', '');
+	}
+	return null;
+}
 
 listingsRouter.get('/', async (req, res) => {
 	const listings = await Listing.find({});
@@ -20,13 +30,33 @@ listingsRouter.get('/:id', async (req, res, next) => {
 listingsRouter.post('/', async (req, res, next) => {
 	const body = req.body;
 
-	const listing = new Listing(body);
+	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+
+	if (!decodedToken.id) {
+		return res.status(401).json({ error: 'token invalid' });
+	}
+
+	const user = await User.findById(decodedToken.id);
+	const listing = new Listing({ ...body, user: user.id });
 
 	const savedListing = await listing.save();
 	res.status(201).json(savedListing);
 });
 
 listingsRouter.put('/:id', async (req, res, next) => {
+	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+
+	if (!decodedToken.id) {
+		return res.status(401).json({ error: 'token invalid' });
+	}
+
+	const listing = await Listing.findById(req.params.id);
+	const user = await User.findById(decodedToken.id);
+
+	if (listing.user.toString() !== user.id) {
+		return res.status(401).json({ error: 'unauthorized user' });
+	}
+
 	Listing.findByIdAndUpdate(req.params.id, req.body, { new: true })
 		.then(updatedListing => {
 			res.json(updatedListing);
@@ -35,14 +65,21 @@ listingsRouter.put('/:id', async (req, res, next) => {
 });
 
 listingsRouter.delete('/:id', async (req, res) => {
-	const delComment = async (id) => {
-		await Comment.findByIdAndRemove(id);
-	};
+	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+
+	if (!decodedToken.id) {
+		return res.status(401).json({ error: 'token invalid' });
+	}
 
 	const listing = await Listing.findById(req.params.id);
-	listing.comments.forEach(c => delComment(c._id));
+	const user = await User.findById(decodedToken.id);
+
+	if (listing.user.toString() !== user.id) {
+		return res.status(401).json({ error: 'unauthorized user' });
+	}
 
 	await Listing.findByIdAndRemove(req.params.id);
+	res.status(204).end();
 });
 
 module.exports = listingsRouter;

@@ -9,6 +9,10 @@ const listingSchema = new mongoose.Schema({
 	description: String,
 	website: String,
 	phone: String,
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
+	},
 	comments: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

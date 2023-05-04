@@ -35,14 +35,14 @@ listingsRouter.put('/:id', async (req, res, next) => {
 });
 
 listingsRouter.delete('/:id', async (req, res) => {
-  const delComment = async (id) => {
-    await Comment.findByIdAndRemove(id);
-  };
+	const delComment = async (id) => {
+		await Comment.findByIdAndRemove(id);
+	};
 
-  const listing = await Listing.findById(req.params.id);
-  listing.comments.forEach(c => delComment(c._id));
+	const listing = await Listing.findById(req.params.id);
+	listing.comments.forEach(c => delComment(c._id));
 
-  await Listing.findByIdAndRemove(req.params.id);
+	await Listing.findByIdAndRemove(req.params.id);
 });
 
 module.exports = listingsRouter;

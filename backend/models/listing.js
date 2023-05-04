@@ -9,12 +9,12 @@ const listingSchema = new mongoose.Schema({
 	description: String,
 	website: String,
 	phone: String,
-  comments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Comment'
-    }
-  ]
+	comments: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Comment'
+		}
+	]
 });
 
 listingSchema.set('toJSON', {

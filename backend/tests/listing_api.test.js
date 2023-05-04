@@ -8,13 +8,13 @@ const Listing = require('../models/listing');
 const helper = require('./test_helper');
 
 beforeEach(async () => {
-	await Listing.deleteMany({});
+	// await Listing.deleteMany({});
 
-	const listingObjects = helper.initialListings
-		.map(l => new Listing(l));
+	// const listingObjects = helper.initialListings
+	// 	.map(l => new Listing(l));
 
-	const promiseArray = listingObjects.map(l => l.save());
-	await Promise.all(promiseArray);
+	// const promiseArray = listingObjects.map(l => l.save());
+	// await Promise.all(promiseArray);
 });
 
 describe('when there are initially some listings saved', () => {

@@ -1,6 +1,17 @@
 const bcrypt = require('bcrypt');
 const usersRouter = require('express').Router();
 const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+
+const getTokenFrom = req => {
+  const auth = req.get('authorization');
+
+  if (auth && auth.startsWith('Bearer ')) {
+    return auth.replace('Bearer ', '');
+  }
+
+  return null;
+};
 
 usersRouter.get('/', async (req, res) => {
 	const users = await User.find({});
@@ -36,19 +47,47 @@ usersRouter.post('/', async (req, res) => {
 });
 
 usersRouter.patch('/:id', async (req, res, next) => {
-	User.findByIdAndUpdate(req.params.id, {
-		name: req.body.name,
-		bio: req.body.bio
-	}, { new: true })
-		.then(updatedUser => {
-			res.json(updatedUser);
-		})
-		.catch(error => next(error));
+  const body = req.body;
+
+  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token invalid' });
+  }
+
+  const userToChange = await User.findById(req.params.id);
+  const queryingUser = await User.findById(decodedToken.id);
+
+  if (userToChange.id !== queryingUser.id) {
+    return res.status(401).json({ error: 'unauthorized user' });
+  }
+
+  User.findByIdAndUpdate(req.params.id, {
+    name: body.name,
+    bio: body.bio
+  }, { new: true })
+    .then(updatedUser => {
+      res.json(updatedUser);
+    })
+    .catch(error => next(error));
 });
 
 usersRouter.delete('/:id', async (req, res, next) => {
-	await User.findByIdAndRemove(req.params.id);
-	res.status(204).end();
+  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token invalid' });
+  }
+
+  const userToChange = await User.findById(req.params.id);
+  const queryingUser = await User.findById(decodedToken.id);
+
+  if (userToChange.id !== queryingUser.id) {
+    return res.status(401).json({ error: 'unauthorized user' });
+  }
+
+  await User.findByIdAndRemove(req.params.id);
+  res.status(204).end();
 });
 
 module.exports = usersRouter;

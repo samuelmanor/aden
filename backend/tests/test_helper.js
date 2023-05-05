@@ -1,6 +1,11 @@
 const Listing = require('../models/listing');
 const User = require('../models/user');
 
+// const supertest = require('supertest');
+// const app = require('../app');
+
+// const api = supertest(app);
+
 const initialListings = [
 	{
 		name: 'doc1',
@@ -17,6 +22,21 @@ const initialListings = [
 		phone: 'num2'
 	}
 ];
+
+// const initialUsers = [
+// 	{
+// 		username: 'exampleuser',
+// 		password: 'secret',
+// 		name: 'test',
+// 		bio: 'this is an example user.'
+// 	},
+// 	{
+// 		username: 'smm',
+// 		password: 'password',
+// 		name: 'samuel',
+// 		bio: 'hello :-)'
+// 	}
+// ];
 
 const nonExistingId = async () => {
 	const listing = new Listing({ name: 'test' });

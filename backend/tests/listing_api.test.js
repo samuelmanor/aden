@@ -8,9 +8,8 @@ const Listing = require('../models/listing');
 const User = require('../models/user');
 const Comment = require('../models/comment');
 const helper = require('./test_helper');
-const { JsonWebTokenError } = require('jsonwebtoken');
 
-beforeEach(async () => { // npm run test listing_api.test.js
+beforeEach(async () => {
 	await Listing.deleteMany({});
 	await Comment.deleteMany({});
 	await User.deleteMany({});
@@ -95,7 +94,7 @@ describe('addition of a new listing', () => {
 
 		const result = await api
 			.post('/api/login')
-			.send(newUser)
+			.send(newUser);
 
 		headers = {
 			'Authorization': `Bearer ${result.body.token}`
@@ -154,7 +153,7 @@ describe('addition of a new listing', () => {
 		await api
 			.post('/api/listings')
 			.send(newListing)
-			.expect(401)
+			.expect(401);
 
 		const listingsAtEnd = await helper.listingsInDb();
 
@@ -178,7 +177,7 @@ describe('editing a specific listing', () => {
 
 		const result = await api
 			.post('/api/login')
-			.send(newUser)
+			.send(newUser);
 
 		headers = {
 			'Authorization': `Bearer ${result.body.token}`
@@ -193,7 +192,7 @@ describe('editing a specific listing', () => {
 				website: 'site4',
 				phone: 'num4'
 			})
-			.set(headers)
+			.set(headers);
 
 		newListing = savedListing.body;
 	});
@@ -211,7 +210,7 @@ describe('editing a specific listing', () => {
 			.send(updatedListing)
 			.set(headers)
 			.expect(200)
-			.expect('Content-Type', /application\/json/)
+			.expect('Content-Type', /application\/json/);
 
 
 		const listingsAtEnd = await helper.listingsInDb();
@@ -230,7 +229,7 @@ describe('editing a specific listing', () => {
 		await api
 			.put(`/api/listings/${listingToUpdate.id}`)
 			.send(updatedListing)
-			.expect(401)
+			.expect(401);
 
 		const listingsAtEnd = await helper.listingsInDb();
 		const savedListing = listingsAtEnd.find(l => l.name === newListing.name);
@@ -254,7 +253,7 @@ describe('deleting a specific listing', () => {
 
 		const result = await api
 			.post('/api/login')
-			.send(newUser)
+			.send(newUser);
 
 		headers = {
 			'Authorization': `Bearer ${result.body.token}`
@@ -269,11 +268,11 @@ describe('deleting a specific listing', () => {
 				website: 'site4',
 				phone: 'num4'
 			})
-			.set(headers)
+			.set(headers);
 
 		newListing = savedListing.body;
 	});
-	
+
 	test('succeeds with valid id and user', async () => {
 		const allListings = await helper.listingsInDb();
 		const listingToDelete = allListings.find(l => l.name === newListing.name);
@@ -281,7 +280,7 @@ describe('deleting a specific listing', () => {
 		await api
 			.delete(`/api/listings/${listingToDelete.id}`)
 			.set(headers)
-			.expect(204)
+			.expect(204);
 
 		const listingsAtEnd = await helper.listingsInDb();
 		expect(listingsAtEnd).toHaveLength(allListings.length - 1);
@@ -296,7 +295,7 @@ describe('deleting a specific listing', () => {
 
 		await api
 			.delete(`/api/listings/${listingToDelete.id}`)
-			.expect(401)
+			.expect(401);
 
 		const listingsAtEnd = await helper.listingsInDb();
 		expect(listingsAtEnd).toHaveLength(allListings.length);

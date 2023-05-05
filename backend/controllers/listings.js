@@ -10,7 +10,7 @@ const getTokenFrom = req => {
 		return auth.replace('Bearer ', '');
 	}
 	return null;
-}
+};
 
 listingsRouter.get('/', async (req, res) => {
 	const listings = await Listing.find({});

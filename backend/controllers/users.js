@@ -4,13 +4,13 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 const getTokenFrom = req => {
-  const auth = req.get('authorization');
+	const auth = req.get('authorization');
 
-  if (auth && auth.startsWith('Bearer ')) {
-    return auth.replace('Bearer ', '');
-  }
+	if (auth && auth.startsWith('Bearer ')) {
+		return auth.replace('Bearer ', '');
+	}
 
-  return null;
+	return null;
 };
 
 usersRouter.get('/', async (req, res) => {
@@ -47,47 +47,47 @@ usersRouter.post('/', async (req, res) => {
 });
 
 usersRouter.patch('/:id', async (req, res, next) => {
-  const body = req.body;
+	const body = req.body;
 
-  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
 
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'token invalid' });
-  }
+	if (!decodedToken.id) {
+		return res.status(401).json({ error: 'token invalid' });
+	}
 
-  const userToChange = await User.findById(req.params.id);
-  const queryingUser = await User.findById(decodedToken.id);
+	const userToChange = await User.findById(req.params.id);
+	const queryingUser = await User.findById(decodedToken.id);
 
-  if (userToChange.id !== queryingUser.id) {
-    return res.status(401).json({ error: 'unauthorized user' });
-  }
+	if (userToChange.id !== queryingUser.id) {
+		return res.status(401).json({ error: 'unauthorized user' });
+	}
 
-  User.findByIdAndUpdate(req.params.id, {
-    name: body.name,
-    bio: body.bio
-  }, { new: true })
-    .then(updatedUser => {
-      res.json(updatedUser);
-    })
-    .catch(error => next(error));
+	User.findByIdAndUpdate(req.params.id, {
+		name: body.name,
+		bio: body.bio
+	}, { new: true })
+		.then(updatedUser => {
+			res.json(updatedUser);
+		})
+		.catch(error => next(error));
 });
 
 usersRouter.delete('/:id', async (req, res, next) => {
-  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
 
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'token invalid' });
-  }
+	if (!decodedToken.id) {
+		return res.status(401).json({ error: 'token invalid' });
+	}
 
-  const userToChange = await User.findById(req.params.id);
-  const queryingUser = await User.findById(decodedToken.id);
+	const userToChange = await User.findById(req.params.id);
+	const queryingUser = await User.findById(decodedToken.id);
 
-  if (userToChange.id !== queryingUser.id) {
-    return res.status(401).json({ error: 'unauthorized user' });
-  }
+	if (userToChange.id !== queryingUser.id) {
+		return res.status(401).json({ error: 'unauthorized user' });
+	}
 
-  await User.findByIdAndRemove(req.params.id);
-  res.status(204).end();
+	await User.findByIdAndRemove(req.params.id);
+	res.status(204).end();
 });
 
 module.exports = usersRouter;

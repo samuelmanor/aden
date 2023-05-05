@@ -39,47 +39,47 @@ commentsRouter.post('/', async (req, res, next) => {
 });
 
 commentsRouter.put('/:id', async (req, res, next) => {
-  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
 
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'token invalid' });
-  }
+	if (!decodedToken.id) {
+		return res.status(401).json({ error: 'token invalid' });
+	}
 
-  const comment = await Comment.findById(req.params.id);
-  const user = await User.findById(decodedToken.id);
+	const comment = await Comment.findById(req.params.id);
+	const user = await User.findById(decodedToken.id);
 
-  if (comment.user.toString() !== user.id) {
-    return res.status(401).json({ error: 'unauthorized user'});
-  }
+	if (comment.user.toString() !== user.id) {
+		return res.status(401).json({ error: 'unauthorized user' });
+	}
 
-  Comment.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then(updatedComment => {
-      res.json(updatedComment);
-    })
-    .catch(error => next(error));
+	Comment.findByIdAndUpdate(req.params.id, req.body, { new: true })
+		.then(updatedComment => {
+			res.json(updatedComment);
+		})
+		.catch(error => next(error));
 });
 
 commentsRouter.delete('/:id', async (req, res, next) => { // in body: listingId
-  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
-  
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'token invalid' });
-  }
+	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
 
-  const comment = await Comment.findById(req.params.id);
-  const user = await User.findById(decodedToken.id);
-  const listing = await Listing.findById(req.body.listingId);
+	if (!decodedToken.id) {
+		return res.status(401).json({ error: 'token invalid' });
+	}
 
-  if (comment.user.toString() !== user.id) {
-    return res.status(401).json({ error: 'unauthorized user' });
-  }
+	const comment = await Comment.findById(req.params.id);
+	const user = await User.findById(decodedToken.id);
+	const listing = await Listing.findById(req.body.listingId);
 
-  listing.comments = listing.comments.filter(l => l._id.toString() !== comment._id.toString());
+	if (comment.user.toString() !== user.id) {
+		return res.status(401).json({ error: 'unauthorized user' });
+	}
 
-  await listing.save();
-  await Comment.findByIdAndRemove(req.params.id);
+	listing.comments = listing.comments.filter(l => l._id.toString() !== comment._id.toString());
 
-  res.status(204).end();
+	await listing.save();
+	await Comment.findByIdAndRemove(req.params.id);
+
+	res.status(204).end();
 });
 
 module.exports = commentsRouter;

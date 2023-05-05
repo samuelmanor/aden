@@ -238,24 +238,73 @@ describe('editing a specific listing', () => {
 	});
 });
 
-// describe('deletion of a listing', () => {
-// 	test('succeeds with status code 204 if id is valid', async () => {
-// 		const listingsAtStart = await helper.listingsInDb();
-// 		const listingToDelete = listingsAtStart[0];
+describe('deleting a specific listing', () => {
+	let headers;
+	let newListing;
 
-// 		await api
-// 			.delete(`/api/listings/${listingToDelete.id}`)
-// 			.expect(204);
+	beforeEach(async () => {
+		const newUser = {
+			username: 'putuser',
+			password: 'password'
+		};
 
-// 		const listingsAtEnd = await helper.listingsInDb();
+		await api
+			.post('/api/users')
+			.send(newUser);
 
-// 		expect(listingsAtEnd).toHaveLength(helper.initialListings.length - 1);
+		const result = await api
+			.post('/api/login')
+			.send(newUser)
 
-// 		const descriptions = listingsAtEnd.map(l => l.description);
+		headers = {
+			'Authorization': `Bearer ${result.body.token}`
+		};
 
-// 		expect(descriptions).not.toContain(listingToDelete.description);
-// 	});
-// });
+		const savedListing = await api
+			.post('/api/listings')
+			.send({
+				name: 'doc4',
+				address: 'add4',
+				description: 'desc4',
+				website: 'site4',
+				phone: 'num4'
+			})
+			.set(headers)
+
+		newListing = savedListing.body;
+	});
+	
+	test('succeeds with valid id and user', async () => {
+		const allListings = await helper.listingsInDb();
+		const listingToDelete = allListings.find(l => l.name === newListing.name);
+
+		await api
+			.delete(`/api/listings/${listingToDelete.id}`)
+			.set(headers)
+			.expect(204)
+
+		const listingsAtEnd = await helper.listingsInDb();
+		expect(listingsAtEnd).toHaveLength(allListings.length - 1);
+
+		const descriptions = listingsAtEnd.map(l => l.description);
+		expect(descriptions).not.toContain(listingToDelete.description);
+	});
+
+	test('fails with invalid user', async () => {
+		const allListings = await helper.listingsInDb();
+		const listingToDelete = allListings.find(l => l.name === newListing.name);
+
+		await api
+			.delete(`/api/listings/${listingToDelete.id}`)
+			.expect(401)
+
+		const listingsAtEnd = await helper.listingsInDb();
+		expect(listingsAtEnd).toHaveLength(allListings.length);
+
+		const descriptions = listingsAtEnd.map(l => l.description);
+		expect(descriptions).toContain(listingToDelete.description);
+	});
+});
 
 afterAll(async () => {
 	await mongoose.connection.close();

@@ -13,11 +13,11 @@ const getTokenFrom = req => {
 	return null;
 };
 
-usersRouter.get('/', async (req, res) => {
-	const users = await User.find({});
+// usersRouter.get('/', async (req, res) => {
+// 	const users = await User.find({});
 
-	res.json(users);
-});
+// 	res.json(users);
+// });
 
 usersRouter.get('/:id', async (req, res) => {
 	const user = await User.findById(req.params.id);

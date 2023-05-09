@@ -1,5 +1,6 @@
 const Listing = require('../models/listing');
 const User = require('../models/user');
+const Comment = require('../models/comment');
 
 const initialListings = [
 	{
@@ -51,4 +52,9 @@ const usersInDb = async () => {
 	return users.map(u => u.toJSON());
 };
 
-module.exports = { initialListings, nonExistingId, listingsInDb, usersInDb };
+const commentsInDb = async () => {
+	const comments = await Comment.find({});
+	return comments.map(c => c.toJSON());
+};
+
+module.exports = { initialListings, nonExistingId, listingsInDb, usersInDb, commentsInDb };

@@ -12,12 +12,12 @@ const getTokenFrom = req => {
 	return null;
 };
 
-listingsRouter.get('/', async (req, res) => {
-	const listings = await Listing.find({});
+listingsRouter.get('/', async (req, res) => { // in body: type, service, location
+	const listings = await Listing.find({ type: req.body.type, service: req.body.service, location: req.body.location });
 	res.json(listings);
 });
 
-listingsRouter.get('/:id', async (req, res, next) => {
+listingsRouter.get('/:id', async (req, res) => {
 	const listing = await Listing.findById(req.params.id).populate('comments', { content: 1, user: 1 });
 
 	if (listing) {
@@ -27,7 +27,7 @@ listingsRouter.get('/:id', async (req, res, next) => {
 	}
 });
 
-listingsRouter.post('/', async (req, res, next) => {
+listingsRouter.post('/', async (req, res) => {
 	const body = req.body;
 
 	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);

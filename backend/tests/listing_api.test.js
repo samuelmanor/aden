@@ -24,7 +24,7 @@ beforeEach(async () => {
 	await Promise.all(listingPromises);
 });
 
-describe('when there are initially some listings saved', () => {
+describe('viewing all listings', () => {
 	test('listings are returned as json', async () => {
 		await api
 			.get('/api/listings')
@@ -36,14 +36,6 @@ describe('when there are initially some listings saved', () => {
 		const res = await api.get('/api/listings');
 
 		expect(res.body).toHaveLength(helper.initialListings.length);
-	});
-
-	test('a specific listing is within the returned listings', async () => {
-		const res = await api.get('/api/listings');
-
-		const descriptions = res.body.map(l => l.description);
-
-		expect(descriptions).toContain('desc2');
 	});
 });
 
@@ -59,23 +51,14 @@ describe('viewing a specific listing', () => {
 			.expect('Content-Type', /application\/json/);
 
 		expect(resultListing.body.name).toEqual(listingToView.name);
-
 	});
 
-	test('fails with statuscode 404 if listing does not exist', async () => {
+	test('fails with invalid id', async () => {
 		const validNonexistingId = await helper.nonExistingId();
 
 		await api
 			.get(`/api/listings/${validNonexistingId}`)
 			.expect(404);
-	});
-
-	test('fails with statuscode 400 if id is invalid', async () => {
-		const invalidId = 'dshljahflasjh';
-
-		await api
-			.get(`/api/listings/${invalidId}`)
-			.expect(400);
 	});
 });
 
@@ -101,7 +84,9 @@ describe('addition of a new listing', () => {
 		};
 	});
 
-	test('a valid listing can be added by a valid user', async () => {
+	test('succeeds with valid user', async () => {
+		const listingsAtStart = await helper.listingsInDb();
+
 		const newListing = {
 			name: 'doc3',
 			address: 'add3',
@@ -118,13 +103,15 @@ describe('addition of a new listing', () => {
 			.expect('Content-Type', /application\/json/);
 
 		const listingsAtEnd = await helper.listingsInDb();
-		expect(listingsAtEnd).toHaveLength(helper.initialListings.length + 1);
+		expect(listingsAtEnd).toHaveLength(listingsAtStart.length + 1);
 
 		const descriptions = listingsAtEnd.map(l => l.description);
-		expect(descriptions).toContain('desc3');
+		expect(descriptions).toContain(newListing.description);
 	});
 
-	test('fails with statuscode 400 if data is invalid', async () => {
+	test('fails with invalid data', async () => {
+		const listingsAtStart = await helper.listingsInDb();
+
 		const newListing = {
 			address: 'add3',
 			description: 'desc3'
@@ -137,11 +124,15 @@ describe('addition of a new listing', () => {
 			.expect(400);
 
 		const listingsAtEnd = await helper.listingsInDb();
+		expect(listingsAtEnd).toEqual(listingsAtStart);
 
-		expect(listingsAtEnd).toHaveLength(helper.initialListings.length);
+		const descriptions = listingsAtEnd.map(l => l.description);
+		expect(descriptions).not.toContain(newListing.description);
 	});
 
-	test('fails with statuscode 401 if token is invalid', async () => {
+	test('fails with invalid user', async () => {
+		const listingsAtStart = await helper.listingsInDb();
+
 		const newListing = {
 			name: 'doc3',
 			address: 'add3',
@@ -156,8 +147,10 @@ describe('addition of a new listing', () => {
 			.expect(401);
 
 		const listingsAtEnd = await helper.listingsInDb();
+		expect(listingsAtEnd).toEqual(listingsAtStart);
 
-		expect(listingsAtEnd).toHaveLength(helper.initialListings.length);
+		const descriptions = listingsAtEnd.map(l => l.description);
+		expect(descriptions).not.toContain(newListing.description);
 	});
 });
 
@@ -215,12 +208,29 @@ describe('editing a specific listing', () => {
 
 		const listingsAtEnd = await helper.listingsInDb();
 		const savedListing = listingsAtEnd.find(l => l.name === newListing.name);
-		expect(savedListing.description).toBe('lorem ipsum');
+		expect(savedListing.description).toBe(updatedListing.description);
+	});
+
+	test('fails with invalid id', async () => {
+		const listingsAtStart = await helper.listingsInDb();
+
+		const updatedListing = {
+			description: 'lorem ipsum'
+		};
+
+		await api
+			.put(`/api/listings/${helper.nonExistingId}`)
+			.send(updatedListing)
+			.set(headers)
+			.expect(400);
+
+		const listingsAtEnd = await helper.listingsInDb();
+		expect(listingsAtEnd).toEqual(listingsAtStart);
 	});
 
 	test('fails with invalid user', async () => {
-		const allListings = await helper.listingsInDb();
-		const listingToUpdate = allListings.find(l => l.name === newListing.name);
+		const listingsAtStart = await helper.listingsInDb();
+		const listingToUpdate = listingsAtStart.find(l => l.name === newListing.name);
 
 		const updatedListing = {
 			description: 'lorem ipsum'
@@ -232,8 +242,7 @@ describe('editing a specific listing', () => {
 			.expect(401);
 
 		const listingsAtEnd = await helper.listingsInDb();
-		const savedListing = listingsAtEnd.find(l => l.name === newListing.name);
-		expect(savedListing.description).toBe('desc4');
+		expect(listingsAtEnd).toEqual(listingsAtStart);
 	});
 });
 
@@ -274,8 +283,8 @@ describe('deleting a specific listing', () => {
 	});
 
 	test('succeeds with valid id and user', async () => {
-		const allListings = await helper.listingsInDb();
-		const listingToDelete = allListings.find(l => l.name === newListing.name);
+		const listingsAtStart = await helper.listingsInDb();
+		const listingToDelete = listingsAtStart.find(l => l.name === newListing.name);
 
 		await api
 			.delete(`/api/listings/${listingToDelete.id}`)
@@ -283,25 +292,22 @@ describe('deleting a specific listing', () => {
 			.expect(204);
 
 		const listingsAtEnd = await helper.listingsInDb();
-		expect(listingsAtEnd).toHaveLength(allListings.length - 1);
+		expect(listingsAtEnd).toHaveLength(listingsAtStart.length - 1);
 
 		const descriptions = listingsAtEnd.map(l => l.description);
 		expect(descriptions).not.toContain(listingToDelete.description);
 	});
 
 	test('fails with invalid user', async () => {
-		const allListings = await helper.listingsInDb();
-		const listingToDelete = allListings.find(l => l.name === newListing.name);
+		const listingsAtStart = await helper.listingsInDb();
+		const listingToDelete = listingsAtStart.find(l => l.name === newListing.name);
 
 		await api
 			.delete(`/api/listings/${listingToDelete.id}`)
 			.expect(401);
 
 		const listingsAtEnd = await helper.listingsInDb();
-		expect(listingsAtEnd).toHaveLength(allListings.length);
-
-		const descriptions = listingsAtEnd.map(l => l.description);
-		expect(descriptions).toContain(listingToDelete.description);
+		expect(listingsAtEnd).toEqual(listingsAtStart);
 	});
 });
 

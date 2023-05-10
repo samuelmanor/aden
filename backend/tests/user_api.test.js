@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const supertest = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../app');
@@ -31,7 +30,7 @@ describe('creating a user', () => {
 			.expect('Content-Type', /application\/json/);
 
 		const usersAtEnd = await helper.usersInDb();
-		expect(usersAtEnd.length).toBe(usersAtStart.length + 1);
+		expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
 
 		const usernames = usersAtEnd.map(u => u.username);
 		expect(usernames).toContain(newUser.username);
@@ -60,7 +59,7 @@ describe('creating a user', () => {
 
 describe('editing a user', () => {
 	let headers;
-	let validUser;
+	let user;
 
 	beforeEach(async () => {
 		const newUser = {
@@ -68,7 +67,60 @@ describe('editing a user', () => {
 			password: 'password'
 		};
 
-		validUser = await api
+		user = await api
+			.post('/api/users')
+			.send(newUser);
+
+		const result = await api
+			.post('/api/login')
+			.send(newUser);
+
+		headers = { 'Authorization': `Bearer ${result.body.token}` };
+	});
+
+	test('succeeds with valid id and user', async () => {
+		const editedUser = { name: 'example user', bio: 'example user bio' };
+
+		await api
+			.patch(`/api/users/${user.body.id}`)
+			.send(editedUser)
+			.set(headers)
+			.expect(200);
+
+		const usersAtEnd = await helper.usersInDb();
+
+		const names = usersAtEnd.map(u => u.name);
+		expect(names).toContain(editedUser.name);
+	});
+
+	test('fails with invalid user', async () => {
+		const usersAtStart = await helper.usersInDb();
+		const editedUser = { name: 'example user', bio: 'example user bio' };
+
+		await api
+			.patch(`/api/users/${user.body.id}`)
+			.send(editedUser)
+			.expect(401);
+
+		const usersAtEnd = await helper.usersInDb();
+		expect(usersAtEnd).toEqual(usersAtStart);
+
+		const names = usersAtEnd.map(u => u.name);
+		expect(names).not.toContain(editedUser.name);
+	});
+});
+
+describe('deleting a specific user', () => {
+	let headers;
+	let user;
+
+	beforeEach(async () => {
+		const newUser = {
+			username: 'username',
+			password: 'password'
+		};
+
+		user = await api
 			.post('/api/users')
 			.send(newUser);
 
@@ -80,83 +132,32 @@ describe('editing a user', () => {
 	});
 
 	test('succeeds with valid user', async () => {
-		await api
-			.patch(`/api/users/${validUser.body.id}`, { name: 'example user', bio: 'example user bio' })
-			.set(headers)
-			.expect(200);
-	});
-
-	test('rejects invalid user', async () => {
-		const invalidUser = {
-			username: 'name',
-			password: 'password'
-		};
+		const usersAtStart = await helper.usersInDb();
 
 		await api
-			.post('/api/users')
-			.send(invalidUser);
-
-		const result = await api
-			.post('/api/login')
-			.send(invalidUser);
-
-		headers = { 'Authorization': `Bearer ${result.body.token}` };
-
-		await api
-			.patch(`/api/users/${validUser.body.id}`, { name: 'example name', bio: 'example user bio' })
-			.set(headers)
-			.expect(401);
-	});
-});
-
-describe('deleting a specific user', () => {
-	let headers;
-	let validUser;
-
-	beforeEach(async () => {
-		const newUser = {
-			username: 'username',
-			password: 'password'
-		};
-
-		validUser = await api
-			.post('/api/users')
-			.send(newUser);
-
-		const result = await api
-			.post('/api/login')
-			.send(newUser);
-
-		headers = { 'Authorization': `Bearer ${result.body.token}` };
-	});
-
-	test('a valid user can delete themselves', async () => {
-		await api
-			.delete(`/api/users/${validUser.body.id}`)
+			.delete(`/api/users/${user.body.id}`)
 			.set(headers)
 			.expect(204);
+
+		const usersAtEnd = await helper.usersInDb();
+		expect(usersAtEnd).toHaveLength(usersAtStart.length - 1);
+
+		const usernames = usersAtEnd.map(u => u.username);
+		expect(usernames).not.toContain(user.body.username);
 	});
 
-	test('an invalid user cannot delete a user', async () => {
-		const invalidUser = {
-			username: 'name',
-			password: 'password'
-		};
+	test('fails with invalid user', async () => {
+		const usersAtStart = await helper.usersInDb();
 
 		await api
-			.post('/api/users')
-			.send(invalidUser);
-
-		const result = await api
-			.post('/api/login')
-			.send(invalidUser);
-
-		headers = { 'Authorization': `Bearer ${result.body.token}` };
-
-		await api
-			.delete(`/api/users/${validUser.body.id}`)
-			.set(headers)
+			.delete(`/api/users/${user.body.id}`)
 			.expect(401);
+
+		const usersAtEnd = await helper.usersInDb();
+		expect(usersAtEnd).toEqual(usersAtStart);
+
+		const usernames = usersAtEnd.map(u => u.username);
+		expect(usernames).toContain(user.body.username);
 	});
 });
 

@@ -10,246 +10,255 @@ const Comment = require('../models/comment');
 const helper = require('./test_helper');
 
 beforeEach(async () => {
-  await Comment.deleteMany({});
-  await Listing.deleteMany({});
-  await User.deleteMany({});
+	await Comment.deleteMany({});
+	await Listing.deleteMany({});
+	await User.deleteMany({});
 
-  const user = new User({ username: 'username', password: 'password' });
-  await user.save();
+	const user = new User({ username: 'username', password: 'password' });
+	await user.save();
 
-  const listingObjects = helper.initialListings
-    .map(l => new Listing({ ...l, user: user.id }));
+	const listingObjects = helper.initialListings
+		.map(l => new Listing({ ...l, user: user.id }));
 
-  const listingPromises = listingObjects.map(l => l.save());
-  await Promise.all(listingPromises);
+	const listingPromises = listingObjects.map(l => l.save());
+	await Promise.all(listingPromises);
 });
 
 describe('addition of a new comment', () => {
-  let headers;
-  let listing;
+	let headers;
+	let listing;
 
-  beforeEach(async () => {
-    const newUser = {
-      username: 'commentUser',
-      password: 'password'
-    };
+	beforeEach(async () => {
+		const newUser = {
+			username: 'commentUser',
+			password: 'password'
+		};
 
-    await api
-      .post('/api/users')
-      .send(newUser)
+		await api
+			.post('/api/users')
+			.send(newUser);
 
-    const userResult = await api
-      .post('/api/login')
-      .send(newUser)
+		const userResult = await api
+			.post('/api/login')
+			.send(newUser);
 
-    headers = { 'Authorization': `Bearer ${userResult.body.token}` };
+		headers = { 'Authorization': `Bearer ${userResult.body.token}` };
 
-    const listings = await helper.listingsInDb();
-    listing = listings[0];
-  });
+		const listings = await helper.listingsInDb();
+		listing = listings[0];
+	});
 
-  test('succeeds with valid id and user', async () => {
-    const commentsAtStart = await helper.commentsInDb();
-    const newComment = { listingId: listing.id, content: 'lorem ipsum' };
+	test('succeeds with valid id and user', async () => {
+		const commentsAtStart = await helper.commentsInDb();
+		const newComment = { listingId: listing.id, content: 'lorem ipsum' };
 
-    await api
-      .post('/api/comments')
-      .send(newComment)
-      .set(headers)
-      .expect(200)
+		await api
+			.post('/api/comments')
+			.send(newComment)
+			.set(headers)
+			.expect(200);
 
-    const commentsAtEnd = await helper.commentsInDb();
-    expect(commentsAtEnd).toHaveLength(commentsAtStart.length + 1);
+		const commentsAtEnd = await helper.commentsInDb();
+		expect(commentsAtEnd).toHaveLength(commentsAtStart.length + 1);
 
-    const contents = commentsAtEnd.map(c => c.content);
-    expect(contents).toContain(newComment.content);
-  });
+		const contents = commentsAtEnd.map(c => c.content);
+		expect(contents).toContain(newComment.content);
+	});
 
-  test('rejects invalid user', async () => {
-    const commentsAtStart = await helper.commentsInDb();
-    const newComment = { listingId: listing.id, content: 'lorem ipsum' };
+	test('fails with invalid user', async () => {
+		const commentsAtStart = await helper.commentsInDb();
+		const newComment = { listingId: listing.id, content: 'lorem ipsum' };
 
-    await api
-      .post('/api/comments')
-      .send(newComment)
-      .expect(401)
+		await api
+			.post('/api/comments')
+			.send(newComment)
+			.expect(401);
 
-    const commentsAtEnd = await helper.commentsInDb();
-    expect(commentsAtEnd).toHaveLength(commentsAtStart.length);
+		const commentsAtEnd = await helper.commentsInDb();
+		expect(commentsAtEnd).toEqual(commentsAtStart);
 
-    const contents = commentsAtEnd.map(c => c.content);
+		const contents = commentsAtEnd.map(c => c.content);
 
-    expect(contents).not.toContain(newComment.content);
-  });
+		expect(contents).not.toContain(newComment.content);
+	});
 
-  test('rejects invalid comment id', async () => {
-    const commentsAtStart = await helper.commentsInDb();
-    const newComment = { listingId: listing.id, content: 'lorem ipsum' };
+	test('fails with invalid comment id', async () => {
+		const commentsAtStart = await helper.commentsInDb();
+		const newComment = { listingId: listing.id, content: 'lorem ipsum' };
 
-    await api
-      .post(`/api/comments/${helper.nonExistingId}`)
-      .send(newComment)
-      .set(headers)
-      .expect(404)
+		await api
+			.post(`/api/comments/${helper.nonExistingId}`)
+			.send(newComment)
+			.set(headers)
+			.expect(404);
 
-    const commentsAtEnd = await helper.commentsInDb();
-    expect(commentsAtEnd).toHaveLength(commentsAtStart.length);
+		const commentsAtEnd = await helper.commentsInDb();
+		expect(commentsAtEnd).toEqual(commentsAtStart);
 
-    const contents = commentsAtEnd.map(c => c.content);
+		const contents = commentsAtEnd.map(c => c.content);
 
-    expect(contents).not.toContain(newComment.content);
-  });
+		expect(contents).not.toContain(newComment.content);
+	});
 });
 
 describe('editing a comment', () => {
-  let headers;
-  let comment;
+	let headers;
+	let comment;
 
-  beforeEach(async () => {
-    const newUser = {
-      username: 'commentUser',
-      password: 'password'
-    };
+	beforeEach(async () => {
+		const newUser = {
+			username: 'commentUser',
+			password: 'password'
+		};
 
-    await api
-      .post('/api/users')
-      .send(newUser)
+		await api
+			.post('/api/users')
+			.send(newUser);
 
-    const userResult = await api
-      .post('/api/login')
-      .send(newUser)
+		const userResult = await api
+			.post('/api/login')
+			.send(newUser);
 
-    headers = { 'Authorization': `Bearer ${userResult.body.token}` };
+		headers = { 'Authorization': `Bearer ${userResult.body.token}` };
 
-    const listingsInDb = await helper.listingsInDb();
-    const listing = listingsInDb[0];
+		const listingsInDb = await helper.listingsInDb();
+		const listing = listingsInDb[0];
 
-    const commentResult = await api
-      .post('/api/comments')
-      .send({ listingId: listing.id, content: 'lorem ipsum' })
-      .set(headers)
+		const commentResult = await api
+			.post('/api/comments')
+			.send({ listingId: listing.id, content: 'lorem ipsum' })
+			.set(headers);
 
-    comment = commentResult.body;
-  });
+		comment = commentResult.body;
+	});
 
-  test('succeeds with valid id and user', async () => {
-    const newContent = 'dolor sit amet'
+	test('succeeds with valid id and user', async () => {
+		const newContent = 'dolor sit amet';
 
-    await api
-      .put(`/api/comments/${comment.id}`)
-      .send({ content: newContent })
-      .set(headers)
-      .expect(200)
+		await api
+			.put(`/api/comments/${comment.id}`)
+			.send({ content: newContent })
+			.set(headers)
+			.expect(200);
 
-    const commentsAtEnd = await helper.commentsInDb();
-    const contents = commentsAtEnd.map(c => c.content);
+		const commentsAtEnd = await helper.commentsInDb();
+		const contents = commentsAtEnd.map(c => c.content);
 
-    expect(contents).toContain(newContent);
-  });
+		expect(contents).toContain(newContent);
+	});
 
-  test('rejects invalid user', async () => {
-    const newContent = 'dolor sit amet'
+	test('fails with invalid user', async () => {
+		const commentsAtStart = await helper.commentsInDb();
+		const newContent = 'dolor sit amet';
 
-    await api
-      .put(`/api/comments/${comment.id}`)
-      .send({ content: newContent })
-      .expect(401)
+		await api
+			.put(`/api/comments/${comment.id}`)
+			.send({ content: newContent })
+			.expect(401);
 
-    const commentsAtEnd = await helper.commentsInDb();
-    const contents = commentsAtEnd.map(c => c.content);
+		const commentsAtEnd = await helper.commentsInDb();
+		expect(commentsAtEnd).toEqual(commentsAtStart);
 
-    expect(contents).not.toContain(newContent);
-  });
+		const contents = commentsAtEnd.map(c => c.content);
+		expect(contents).not.toContain(newContent);
+	});
 
-  test('rejects invalid comment id', async () => {
-    const newContent = 'dolor sit amet';
+	test('fails with invalid comment id', async () => {
+		const commentsAtStart = await helper.commentsInDb();
+		const newContent = 'dolor sit amet';
 
-    await api
-      .put(`/api/comments/${helper.nonExistingId}`)
-      .send({ content: newContent })
-      .set(headers)
-      .expect(400)
+		await api
+			.put(`/api/comments/${helper.nonExistingId}`)
+			.send({ content: newContent })
+			.set(headers)
+			.expect(400);
 
-    const commentsAtEnd = await helper.commentsInDb();
-    const contents = commentsAtEnd.map(c => c.content);
+		const commentsAtEnd = await helper.commentsInDb();
+		expect(commentsAtEnd).toEqual(commentsAtStart);
 
-    expect(contents).not.toContain(newContent);
-  });
+		const contents = commentsAtEnd.map(c => c.content);
+		expect(contents).not.toContain(newContent);
+	});
 });
 
 describe('deleting a comment', () => {
-  let headers;
-  let listing;
-  let comment;
+	let headers;
+	let listing;
+	let comment;
 
-  beforeEach(async () => {
-    const newUser = {
-      username: 'commentUser',
-      password: 'password'
-    };
+	beforeEach(async () => {
+		const newUser = {
+			username: 'commentUser',
+			password: 'password'
+		};
 
-    await api
-      .post('/api/users')
-      .send(newUser)
+		await api
+			.post('/api/users')
+			.send(newUser);
 
-    const userResult = await api
-      .post('/api/login')
-      .send(newUser)
+		const userResult = await api
+			.post('/api/login')
+			.send(newUser);
 
-    headers = { 'Authorization': `Bearer ${userResult.body.token}` };
+		headers = { 'Authorization': `Bearer ${userResult.body.token}` };
 
-    const listingsInDb = await helper.listingsInDb();
-    listing = listingsInDb[0];
+		const listingsInDb = await helper.listingsInDb();
+		listing = listingsInDb[0];
 
-    const commentResult = await api
-      .post('/api/comments')
-      .send({ listingId: listing.id, content: 'unique comment' })
-      .set(headers)
+		const commentResult = await api
+			.post('/api/comments')
+			.send({ listingId: listing.id, content: 'unique comment' })
+			.set(headers);
 
-    comment = commentResult.body;
-  });
+		comment = commentResult.body;
+	});
 
-  test('succeeds with valid id and user', async () => {
-    const allComments = await helper.commentsInDb();
-    const commentToDelete = allComments.find(c => c.content === comment.content);
+	test('succeeds with valid id and user', async () => {
+		const commentsAtStart = await helper.commentsInDb();
+		const commentToDelete = commentsAtStart.find(c => c.content === comment.content);
 
-    await api
-      .delete(`/api/comments/${commentToDelete.id}`)
-      .send({ listingId: listing.id })
-      .set(headers)
-      .expect(204)
+		await api
+			.delete(`/api/comments/${commentToDelete.id}`)
+			.send({ listingId: listing.id })
+			.set(headers)
+			.expect(204);
 
-    const commentsAtEnd = await helper.commentsInDb();
-    expect(commentsAtEnd).toHaveLength(allComments.length - 1);
+		const commentsAtEnd = await helper.commentsInDb();
+		expect(commentsAtEnd).toHaveLength(commentsAtStart.length - 1);
 
-    const contents = commentsAtEnd.map(c => c.content)
-    expect(contents).not.toContain(commentToDelete.content);
-  });
+		const contents = commentsAtEnd.map(c => c.content);
+		expect(contents).not.toContain(commentToDelete.content);
+	});
 
-  test('rejects invalid user', async () => {
-    const allComments = await helper.commentsInDb();
-    const commentToDelete = allComments.find(c => c.content === comment.content);
+	test('fails with invalid user', async () => {
+		const commentsAtStart = await helper.commentsInDb();
+		const commentToDelete = commentsAtStart.find(c => c.content === comment.content);
 
-    await api
-      .delete(`/api/comments/${commentToDelete.id}`)
-      .send({ listingId: listing.id })
-      .expect(401)
+		await api
+			.delete(`/api/comments/${commentToDelete.id}`)
+			.send({ listingId: listing.id })
+			.expect(401);
 
-    const commentsAtEnd = await helper.commentsInDb();
-    const contents = commentsAtEnd.map(c => c.content);
+		const commentsAtEnd = await helper.commentsInDb();
+		expect(commentsAtEnd).toEqual(commentsAtStart);
 
-    expect(contents).toContain(commentToDelete.content);
-  });
+		const contents = commentsAtEnd.map(c => c.content);
+		expect(contents).toContain(commentToDelete.content);
+	});
 
-  test('rejects invalid comment id', async () => {
-    const allComments = await helper.commentsInDb();
+	test('fails with invalid comment id', async () => {
+		const commentsAtStart = await helper.commentsInDb();
 
-    await api
-      .delete(`/api/comments/${helper.nonExistingId}`)
-      .send({ listingId: listing.id })
-      .set(headers)
+		await api
+			.delete(`/api/comments/${helper.nonExistingId}`)
+			.send({ listingId: listing.id })
+			.set(headers);
 
-    const commentsAtEnd = await helper.commentsInDb();
-    expect(commentsAtEnd).toHaveLength(allComments.length);
-  });
-})
+		const commentsAtEnd = await helper.commentsInDb();
+		expect(commentsAtEnd).toEqual(commentsAtStart);
+	});
+});
+
+afterAll(async () => {
+	await mongoose.connection.close();
+});

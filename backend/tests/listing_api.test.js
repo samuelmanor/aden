@@ -24,7 +24,7 @@ beforeEach(async () => {
 	await Promise.all(listingPromises);
 });
 
-describe('viewing all listings', () => {
+describe('viewing all listings', () => { // test that joined comments on a deleted listing are also deleted
 	test('listings are returned as json', async () => {
 		await api
 			.get('/api/listings')

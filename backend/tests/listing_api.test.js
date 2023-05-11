@@ -24,7 +24,7 @@ beforeEach(async () => {
 	await Promise.all(listingPromises);
 });
 
-describe('viewing all listings', () => { // test that joined comments on a deleted listing are also deleted
+describe('viewing all listings', () => {
 	test('listings are returned as json', async () => {
 		await api
 			.get('/api/listings')
@@ -296,6 +296,34 @@ describe('deleting a specific listing', () => {
 
 		const descriptions = listingsAtEnd.map(l => l.description);
 		expect(descriptions).not.toContain(listingToDelete.description);
+	});
+
+	test('joined comments are also deleted', async () => {
+		const listingsAtStart = await helper.listingsInDb();
+		const listingToDelete = listingsAtStart.find(l => l.name === newListing.name);
+
+		const commentsAtStart = await helper.commentsInDb();
+		const newComment = { listingId: listingToDelete.id, content: 'to delete' };
+
+		await api
+			.post('/api/comments')
+			.send(newComment)
+			.set(headers);
+
+		const commentsInMiddle = await helper.commentsInDb();
+		expect(commentsInMiddle).toHaveLength(commentsAtStart.length + 1);
+
+		await api
+			.delete(`/api/listings/${listingToDelete.id}`)
+			.set(headers)
+			.expect(204);
+
+		const listingsAtEnd = await helper.listingsInDb();
+		expect(listingsAtEnd).toHaveLength(listingsAtStart.length - 1);
+
+		const commentsAtEnd = await helper.commentsInDb();
+		const contents = commentsAtEnd.map(c => c.content);
+		expect(contents).not.toContain(newComment.content);
 	});
 
 	test('fails with invalid user', async () => {

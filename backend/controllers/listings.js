@@ -64,22 +64,30 @@ listingsRouter.put('/:id', async (req, res, next) => {
 		.catch(error => next(error));
 });
 
-listingsRouter.delete('/:id', async (req, res) => { // delete all joined comments on listing delete
-	// const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+listingsRouter.delete('/:id', async (req, res) => {
+	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
 
-	// if (!decodedToken.id) {
-	// 	return res.status(401).json({ error: 'token invalid' });
-	// }
+	if (!decodedToken.id) {
+		return res.status(401).json({ error: 'token invalid' });
+	}
 
-	// const listing = await Listing.findById(req.params.id);
-	// const user = await User.findById(decodedToken.id);
+	const listing = await Listing.findById(req.params.id);
+	const user = await User.findById(decodedToken.id);
 
-	// if (listing.user.toString() !== user.id) {
-	// 	return res.status(401).json({ error: 'unauthorized user' });
-	// }
+	if (listing.user.toString() !== user.id) {
+		return res.status(401).json({ error: 'unauthorized user' });
+	}
 
-	// await Listing.findByIdAndRemove(req.params.id);
-	// res.status(204).end();
+	const commentIds = listing.comments.map(c => c._id.toString());
+
+	const delComment = async (id) => {
+		await Comment.findByIdAndRemove(id);
+	};
+
+	commentIds.forEach(id => delComment(id));
+
+	await Listing.findByIdAndRemove(req.params.id);
+	res.status(204).end();
 });
 
 module.exports = listingsRouter;

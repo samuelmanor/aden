@@ -1,8 +1,15 @@
-const App = (props) => {
+import { useState, useEffect } from 'react';
+
+import Filter from "./components/Filter";
+import MainContainer from "./components/MainContainer";
+import Profile from "./components/Profile";
+
+const App = () => {
+  const [mainDisplay, setMainDisplay] = useState('filter');
 
   return (
     <div>
-      <button onClick={() => console.log(props)}>console.log props</button>
+      <MainContainer>{mainDisplay === 'filter' ? <Filter /> : <Profile />}</MainContainer>
     </div>
   )
 }

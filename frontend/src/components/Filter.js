@@ -3,14 +3,16 @@ import listingService from '../services/listings';
 
 const Filter = () => {
   const [listings, setListings] = useState([]);
-  const [type, setType] = useState('first');
+  const [identity, setIdentity] = useState('first');
   const [service, setService] = useState('second');
   const [location, setLocation] = useState('third');
 
   const getListings = () => {
+    const filters = { identity: identity, service: service, location: location };
+
     listingService
-      .getFiltered({ type: type, service: service, location: location})
-      .then(returnedListings => console.log(returnedListings));
+      .getFiltered(filters)
+      .then(returnedListings => setListings(returnedListings));
   };
 
   return (
@@ -19,7 +21,6 @@ const Filter = () => {
       <p>seeking</p>
       <p>near</p>
       <button onClick={getListings}>search</button>
-      {/* <button onClick={() => console.log(listings)}>log listings</button> */}
     </div>
   )
 };

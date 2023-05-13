@@ -12,9 +12,10 @@ const getTokenFrom = req => {
 	return null;
 };
 
-listingsRouter.get('/', async (req, res) => { // in body: type, service, location
-	const listings = await Listing.find({ type: req.body.type, service: req.body.service, location: req.body.location });
+listingsRouter.post('/search', async (req, res) => { // in body: type, service, location
+	const listings = await Listing.find({ identity: { $in: [ 'both', req.body.identity.toString() ] }, service: req.body.service.toString(), location: req.body.location.toString() });
 	res.json(listings);
+	
 });
 
 listingsRouter.get('/:id', async (req, res) => {

@@ -19,7 +19,7 @@ const listingSchema = new mongoose.Schema({
 			ref: 'Comment'
 		}
 	],
-	type: String,
+	identity: String,
 	service: String,
 	location: String
 });

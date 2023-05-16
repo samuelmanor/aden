@@ -1,17 +1,18 @@
-const MainContainer = (props) => {
-  
-  const style = {
-    width: '900px',
-    height: '550px',
-    margin: '0 auto',
-    fontFamily: "'Epilogue', sans-serif",
-    color: '#f7f7f2'
-  }
+import styled from 'styled-components';
 
+const Container = styled.div`
+  width: 60em;
+  height: 35em;
+  margin: 0 auto;
+  font-family: 'Epilogue', sans-serif;
+  color: #f7f7f2  
+`
+
+const MainContainer = (props) => {
   return (
-    <div className='main-container' style={style}>
+    <Container className='main-container'>
       {props.children}
-    </div>
+    </Container>
   )
 };
 

@@ -12,10 +12,28 @@ const getTokenFrom = req => {
 	return null;
 };
 
+listingsRouter.get('/filters', async (req, res) => {
+	const listings = await Listing.find({});
+
+	const identities = listings.map(l => l.identity);
+	const services = listings.map(l => l.service);
+	const locations = listings.map(l => l.location);
+
+	const findDuplicates = (val, index, arr) => {
+		return arr.indexOf(val) === index;
+	};
+
+	const filters = {
+		identities: identities.filter(findDuplicates),
+		services: services.filter(findDuplicates),
+		locations: locations.filter(findDuplicates)
+	}
+	res.json(filters);
+});
+
 listingsRouter.post('/search', async (req, res) => { // in body: type, service, location
 	const listings = await Listing.find({ identity: { $in: [ 'both', req.body.identity.toString() ] }, service: req.body.service.toString(), location: req.body.location.toString() });
 	res.json(listings);
-	
 });
 
 listingsRouter.get('/:id', async (req, res) => {

@@ -2,9 +2,9 @@ import { useState } from "react";
 
 const Dropdown = ({ placeholder, arr, select }) => {
   const [show, setShow] = useState(false);
+  const [selectedText, setSelectedText] = useState(null);
 
   const dropdownStyle ={
-    // backgroundColor: 'red',
     option: {
       display: show ? '' : 'none'
     }
@@ -16,19 +16,15 @@ const Dropdown = ({ placeholder, arr, select }) => {
 
   const selectOption = (option) => {
     select(option);
-
+    setSelectedText(option);
     setShow(false);
-  };
-
-  const toggleShow = () => {
-    setShow(!show);
   };
 
   const options = arr.map(o => <div key={o} style={dropdownStyle.option} onClick={(e) => selectOption(e.target.innerText)}>{o}</div>);
 
   return (
     <div style={dropdownStyle}>
-      <p onClick={toggleShow}>{placeholder}</p>
+      <p onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</p>
       {options}
     </div>
   )

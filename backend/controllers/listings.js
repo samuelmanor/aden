@@ -20,7 +20,7 @@ listingsRouter.get('/filters', async (req, res) => {
 	const locations = listings.map(l => l.location);
 
 	const findDuplicates = (val, index, arr) => {
-		return arr.indexOf(val) === index;
+		return arr.indexOf(val) === index && val !== 'both';
 	};
 
 	const filters = {

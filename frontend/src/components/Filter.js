@@ -18,7 +18,8 @@ const Filter = () => {
       .getFilters()
       .then(returnedFilters => {
         setFilterOptions({
-          identities: returnedFilters.identities,
+          // identities: returnedFilters.identities,
+          identities: ["transmasc", "transfem"],
           services: returnedFilters.services,
           locations: returnedFilters.locations
         });
@@ -57,7 +58,7 @@ const Filter = () => {
 
       { activeQuery ? <button onClick={getListings}>search</button> : null }
       </div>
-      
+
       <ListingsContainer listings={listings} />
     </div>
   )

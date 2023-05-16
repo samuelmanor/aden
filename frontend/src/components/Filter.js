@@ -1,38 +1,53 @@
 import { useEffect, useState } from 'react';
 import listingService from '../services/listings';
+import Dropdown from './Dropdown';
 
 const Filter = () => {
   // const [listings, setListings] = useState([]); // other component will house listings obj ?
-  const [query, setQuery] = useState({ identity: null, service: null, location: null });
+  const [filterOptions, setFilterOptions] = useState({});
 
-  const [identities, setIdentities] = useState([]);
-  const [services, setServices] = useState([]);
-  const [locations, setLocations] = useState([]);
+  const [identitySel, setIdentitySel] = useState('');
+  const [serviceSel, setServiceSel] = useState('');
+  const [locationSel, setLocationSel] = useState('');
 
   useEffect(() => {
     listingService
       .getFilters()
       .then(returnedFilters => {
-        setIdentities(returnedFilters.identities);
-        setServices(returnedFilters.services);
-        setLocations(returnedFilters.locations);
+        setFilterOptions({
+          identities: returnedFilters.identities,
+          services: returnedFilters.services,
+          locations: returnedFilters.locations
+        });
       });
   }, []);
 
   const getListings = () => {
-    // const filters = { identity: identity, service: service, location: location };
-
     listingService
-      .search(query)
+      .search({
+        identity: identitySel,
+        service: serviceSel,
+        location: locationSel
+      })
       .then(returnedListings => console.log(returnedListings));
   };
+
+  useEffect(() => {
+    console.log('identity:', identitySel, 'service:', serviceSel, 'location:', locationSel);
+  }, [ identitySel, serviceSel, locationSel ]);
 
   return (
     <div>
       <p>i am</p>
+      <Dropdown placeholder='...' arr={filterOptions.identities} select={setIdentitySel} />
+
       <p>seeking</p>
+      <Dropdown placeholder='...' arr={filterOptions.services} select={setServiceSel} />
+
       <p>near</p>
-      {/* <button onClick={() => console.log(identities, services, locations)}>search</button> */}
+      <Dropdown placeholder='...' arr={filterOptions.locations} select={setLocationSel} />
+
+      <button onClick={getListings}>search</button>
     </div>
   )
 };

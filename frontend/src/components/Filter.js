@@ -1,18 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import listingService from '../services/listings';
 
 const Filter = () => {
-  const [listings, setListings] = useState([]);
-  const [identity, setIdentity] = useState('first');
-  const [service, setService] = useState('second');
-  const [location, setLocation] = useState('third');
+  // const [listings, setListings] = useState([]); // other component will house listings obj ?
+  const [query, setQuery] = useState({ identity: null, service: null, location: null });
+
+  const [identities, setIdentities] = useState([]);
+  const [services, setServices] = useState([]);
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    listingService
+      .getFilters()
+      .then(returnedFilters => {
+        setIdentities(returnedFilters.identities);
+        setServices(returnedFilters.services);
+        setLocations(returnedFilters.locations);
+      });
+  }, []);
 
   const getListings = () => {
-    const filters = { identity: identity, service: service, location: location };
+    // const filters = { identity: identity, service: service, location: location };
 
     listingService
-      .getFiltered(filters)
-      .then(returnedListings => setListings(returnedListings));
+      .search(query)
+      .then(returnedListings => console.log(returnedListings));
   };
 
   return (
@@ -20,7 +32,7 @@ const Filter = () => {
       <p>i am</p>
       <p>seeking</p>
       <p>near</p>
-      <button onClick={getListings}>search</button>
+      {/* <button onClick={() => console.log(identities, services, locations)}>search</button> */}
     </div>
   )
 };

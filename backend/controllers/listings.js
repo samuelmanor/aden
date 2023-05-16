@@ -27,11 +27,11 @@ listingsRouter.get('/filters', async (req, res) => {
 		identities: identities.filter(findDuplicates),
 		services: services.filter(findDuplicates),
 		locations: locations.filter(findDuplicates)
-	}
+	};
 	res.json(filters);
 });
 
-listingsRouter.post('/search', async (req, res) => { // in body: type, service, location
+listingsRouter.post('/search', async (req, res) => { // in body: identity, service, location
 	const listings = await Listing.find({ identity: { $in: [ 'both', req.body.identity.toString() ] }, service: req.body.service.toString(), location: req.body.location.toString() });
 	res.json(listings);
 });

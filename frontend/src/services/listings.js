@@ -12,19 +12,16 @@ const baseUrl = 'http://localhost:3001/api/listings';
 //   return req.then(res => res.data);
 // };
 
-const getFiltered = (filters) => {
-  // const req = axios.get(`${baseUrl}/search`, {
-  //   data: {
-  //     identity: identity,
-  //     service: service,
-  //     location: location
-  //   }
-  // });
-  // return req.then(res => res.data);
+const search = (filters) => {
   const req = axios.post(`${baseUrl}/search`, filters);
   return req.then(res => res.data);
 };
 
-const exportObj = { getFiltered };
+const getFilters = () => {
+  const req = axios.get(`${baseUrl}/filters`);
+  return req.then(res => res.data);
+};
+
+const exportObj = { search, getFilters };
 
 export default exportObj;

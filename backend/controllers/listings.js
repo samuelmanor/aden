@@ -32,7 +32,7 @@ listingsRouter.get('/filters', async (req, res) => {
 });
 
 listingsRouter.post('/search', async (req, res) => { // in body: identity, service, location
-	const listings = await Listing.find({ identity: { $in: [ 'both', req.body.identity.toString() ] }, service: req.body.service.toString(), location: req.body.location.toString() });
+	const listings = await Listing.find({ identity: { $in: [ 'both', req.body.identity.toString() ] }, service: req.body.service.toString(), location: req.body.location.toString() }).populate('user');
 	res.json(listings);
 });
 

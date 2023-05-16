@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import listingService from '../services/listings';
 import Dropdown from './Dropdown';
+import ListingsContainer from './ListingsContainer';
 
 const Filter = () => {
-  // const [listings, setListings] = useState([]); // other component will house listings obj ?
+  const [listings, setListings] = useState([]);
   const [filterOptions, setFilterOptions] = useState({});
 
   const [identitySel, setIdentitySel] = useState('');
   const [serviceSel, setServiceSel] = useState('');
   const [locationSel, setLocationSel] = useState('');
+
+  const [activeQuery, setActiveQuery] = useState(false);
 
   useEffect(() => {
     listingService
@@ -29,15 +32,20 @@ const Filter = () => {
         service: serviceSel,
         location: locationSel
       })
-      .then(returnedListings => console.log(returnedListings));
+      .then(returnedListings => setListings(returnedListings));
   };
 
   useEffect(() => {
-    console.log('identity:', identitySel, 'service:', serviceSel, 'location:', locationSel);
-  }, [ identitySel, serviceSel, locationSel ]);
+    console.log('identity:', identitySel, 'service:', serviceSel, 'location:', locationSel, activeQuery); // dev
+  }, [ identitySel, serviceSel, locationSel, activeQuery ]);
+
+  useEffect(() => {
+    identitySel && serviceSel && locationSel ? setActiveQuery(true) : setActiveQuery(false);
+  }, [identitySel, serviceSel, locationSel]);
 
   return (
     <div>
+      <div>
       <p>i am</p>
       <Dropdown placeholder='...' arr={filterOptions.identities} select={setIdentitySel} />
 
@@ -47,7 +55,10 @@ const Filter = () => {
       <p>near</p>
       <Dropdown placeholder='...' arr={filterOptions.locations} select={setLocationSel} />
 
-      <button onClick={getListings}>search</button>
+      { activeQuery ? <button onClick={getListings}>search</button> : null }
+      </div>
+      
+      <ListingsContainer listings={listings} />
     </div>
   )
 };

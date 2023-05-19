@@ -1,35 +1,31 @@
-import { useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
   user-select: none;
-  cursor: pointer;
   display: flex;
   font-size: 50px;
   padding-top: 0.4em;
 `
 
-const Title = styled.p`
+const Label = styled.p`
   margin-right: 1em;
   margin-left: 2em;
 `
 
 const Current = styled.p`
   border-bottom: 2px solid rgb(247, 247, 242);
+  cursor: pointer;
 `
 
 const Options = styled.div`
-  // overflow: scroll;
+  font-size: 25px;
   // border: 2px solid rgb(247, 247, 242);
   // border-top: none;
-  // height: 3.5em;
-  // overflow: scroll;
-  // font-size: 25px;
-
-  font-size: 25px;
-  border-bottom: 2px solid rgb(247, 247, 242);
+  background-color: red;
   height: 3.5em;
   overflow: scroll;
+  cursor: pointer;
 
   position: absolute;
 `
@@ -37,8 +33,6 @@ const Options = styled.div`
 const Element = styled.p`
   user-select: none;
   display: block;
-  // border-left: 2px solid rgb(247, 247, 242);
-  // border-right: 2px solid rgb(247, 247, 242);
   margin: 0;
   padding: 0.5em 0 0.5em 0;
   &:hover {
@@ -46,7 +40,7 @@ const Element = styled.p`
   }
 `
 
-const Dropdown = ({ placeholder, title, arr, select }) => {
+const Dropdown = ({ placeholder, label, arr, select }) => {
   const [show, setShow] = useState(false);
   const [selectedText, setSelectedText] = useState(null);
 
@@ -65,19 +59,13 @@ const Dropdown = ({ placeholder, title, arr, select }) => {
       {o}
     </Element>
   );
-  
-  const calcWidth = () => {
-    // const titleWidth = document.getElementById('title').offsetWidth;
-    const filterWidth = document.getElementById('filter').offsetWidth;
 
-    // return filterWidth - titleWidth - 250;
-  };
 
   return (
     <Container>
-      <Title id={title} >{title}</Title>
+      <Label onClick={() => console.log(this)} id={label}>{label}</Label>
 
-      <Current style={{ width: calcWidth() }} onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</Current>
+      <Current onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</Current>
 
       <Options>
         {options}

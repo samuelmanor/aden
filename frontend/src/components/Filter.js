@@ -48,11 +48,11 @@ const Filter = () => {
     <div>
       <div id='filter'>
 
-      <Dropdown placeholder='...' title={'i am'} arr={filterOptions.identities} select={setIdentitySel} />
+      <Dropdown placeholder='...' label={'i am'} arr={filterOptions.identities} select={setIdentitySel} />
 
-      <Dropdown placeholder='...' title={'seeking'} arr={filterOptions.services} select={setServiceSel} />
+      <Dropdown placeholder='...' label={'seeking'} arr={filterOptions.services} select={setServiceSel} />
 
-      <Dropdown placeholder='...' title={'near'} arr={filterOptions.locations} select={setLocationSel} />
+      <Dropdown placeholder='...' label={'near'} arr={filterOptions.locations} select={setLocationSel} />
 
       { activeQuery ? <button onClick={getListings}>search</button> : null }
       </div>

@@ -1,11 +1,11 @@
-import { createRef, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
   user-select: none;
   display: flex;
   font-size: 50px;
-  padding-top: 0.4em;
+  padding-top: 0.2em;
 `
 
 const Label = styled.p`
@@ -20,29 +20,35 @@ const Current = styled.p`
 
 const Options = styled.div`
   font-size: 25px;
-  // border: 2px solid rgb(247, 247, 242);
-  // border-top: none;
-  background-color: red;
   height: 3.5em;
   overflow: scroll;
   cursor: pointer;
-
   position: absolute;
+  right: 13.6em;
+  margin-top: 4.05em;
+  border: 2px solid rgb(247, 247, 242);
 `
 
 const Element = styled.p`
   user-select: none;
   display: block;
   margin: 0;
-  padding: 0.5em 0 0.5em 0;
+  padding: 0.5em 0 0.5em 0.5em;
   &:hover {
     background-color: rgba(247, 247, 242, 0.2);
   }
 `
 
-const Dropdown = ({ placeholder, label, arr, select }) => {
+const Dropdown = ({ placeholder, label, arr, select, filter }) => {
   const [show, setShow] = useState(false);
   const [selectedText, setSelectedText] = useState(null);
+  const [labelWidth, setLabelWidth] = useState(0);
+
+  const labelRef = useCallback(node => {
+    if (node !== null) {
+      setLabelWidth(node.getBoundingClientRect().width);
+    }
+  }, [])
 
   if (!arr) {
     return null;
@@ -54,20 +60,23 @@ const Dropdown = ({ placeholder, label, arr, select }) => {
     setShow(false);
   };
 
+  const currentWidth = () => {
+    return filter.current.offsetWidth - labelWidth - 250;
+  };
+
   const options = arr.map(o => 
     <Element key={o} style={{ display: show ? '' : 'none' }} onClick={(e) => selectOption(e.target.innerText)}>
       {o}
     </Element>
   );
 
-
   return (
     <Container>
-      <Label onClick={() => console.log(this)} id={label}>{label}</Label>
+      <Label ref={labelRef} id={label} >{label}</Label>
 
-      <Current onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</Current>
+      <Current style={{ width: currentWidth() }} onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</Current>
 
-      <Options>
+      <Options style={{ width: currentWidth(), display: show ? '' : 'none' }}>
         {options}
       </Options>
 

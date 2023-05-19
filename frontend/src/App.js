@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import Filter from "./components/Filter";
 import MainContainer from "./components/MainContainer";

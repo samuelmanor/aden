@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import Listing from "./Listing";
+import { useRef, useState } from "react";
 
 const Container = styled.div`
   padding-top: 1em;
@@ -8,7 +10,7 @@ const Container = styled.div`
   gap: 1em;
 `
 
-const Listing = styled.div`
+const SmallListing = styled.div`
   color: black;
   border: 1px solid black;
   width: 26em;
@@ -21,6 +23,7 @@ const Name = styled.p`
   color: rgb(247, 247, 242);
   padding: 1em;
   font-size: 28px;
+  cursor: pointer;
 `
 
 const Address = styled.p`
@@ -29,36 +32,46 @@ const Address = styled.p`
 `
 
 const Description = styled.div`
-  // border: 1px solid red;
   height: 150px;
-  overflow: scroll;
   padding: 1em;
   text-align: justify;
 `
 
+const Info = styled.p`
+  text-align: center;
+  user-select: none;
+`
+
 const ListingsContainer = ({ listings }) => {
+  const [selected, setSelected] = useState(null);
+
+  const containerRef = useRef();
+
   if (!listings) {
     return null;
   };
 
+  const expandListing = (listing) => {
+    setSelected(listing);
+    setTimeout(() => {
+      containerRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, 10);
+  };
+
   return (
-    <Container>
+    <Container ref={containerRef}>
+       <Listing listing={selected} toggleExpand={() => setSelected(null)} />
+
       {listings.map(l => 
-        <Listing key={l.id}>
-          <Name className='gradient-bg'>{l.name}</Name>
+        <SmallListing key={l.id}>
+          <Name className='gradient-bg' onClick={() => expandListing(l)}>{l.name}</Name>
+
           <Address>{l.address}</Address>
-          <Description>{l.description}</Description>
 
-          {/* <div>
-            {l.phone}
-            {l.website}
-          </div>
+          <Description>{l.description.length > 350 ? `${l.description.substring(0, 350)}...` : l.description}</Description>
 
-          <div>
-            <p>posted by {l.user.name}</p>
-            <p>@{l.user.username}</p>
-          </div> */}
-        </Listing>)}
+          <Info>{l.comments.length === 1 ? `${l.comments.length} comment` : `${l.comments.length} comments`}</Info>
+        </SmallListing>)}
     </Container>
   )
 }

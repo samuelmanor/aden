@@ -29,6 +29,7 @@ const Filter = () => {
   const [activeQuery, setActiveQuery] = useState(false);
 
   const filterRef = useRef();
+  const listingsRef = useRef();
 
   useEffect(() => {
     listingService
@@ -43,6 +44,12 @@ const Filter = () => {
       });
   }, []);
 
+  const scrollToResults = () => {
+    setTimeout(() => {
+      listingsRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, 10);
+  };
+
   const getListings = () => {
     listingService
       .search({
@@ -50,7 +57,10 @@ const Filter = () => {
         service: serviceSel,
         location: locationSel
       })
-      .then(returnedListings => setListings(returnedListings));
+      .then(returnedListings => {
+        setListings(returnedListings);
+        scrollToResults();
+      });
   };
 
   // useEffect(() => {
@@ -74,7 +84,9 @@ const Filter = () => {
         { activeQuery ? <Button onClick={getListings}>search</Button> : null }
       </div>
 
-      <ListingsContainer listings={listings} />
+      <div ref={listingsRef}>
+        <ListingsContainer listings={listings} />
+      </div>
     </div>
   )
 };

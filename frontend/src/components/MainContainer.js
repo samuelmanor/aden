@@ -10,7 +10,7 @@ const Container = styled.div`
 
 const MainContainer = (props) => {
   return (
-    <Container className='main-container'>
+    <Container className='gradient-bg'>
       {props.children}
     </Container>
   )

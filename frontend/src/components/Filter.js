@@ -10,7 +10,6 @@ const Button = styled.button`
   color: rgb(247, 247, 242);
   font-size: 40px;
   font-family: 'Epilogue', sans-serif;
-  padding: 0.5em;
   margin: 0 auto;
   display: block;
   cursor: pointer;

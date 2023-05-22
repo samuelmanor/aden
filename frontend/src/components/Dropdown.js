@@ -4,8 +4,8 @@ import styled from "styled-components";
 const Container = styled.div`
   user-select: none;
   display: flex;
-  font-size: 50px;
-  padding-top: 0.2em;
+  font-size: 60px;
+  margin-bottom: -0.2em;
 `
 
 const Label = styled.p`
@@ -19,12 +19,12 @@ const Current = styled.p`
 `
 
 const Options = styled.div`
-  font-size: 25px;
-  height: 3.5em;
+  font-size: 30px;
+  height: 3em;
   overflow: scroll;
   cursor: pointer;
   position: absolute;
-  right: 13.6em;
+  right: 11.2em;
   margin-top: 4.05em;
   border: 2px solid rgb(247, 247, 242);
 `
@@ -61,7 +61,7 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
   };
 
   const currentWidth = () => {
-    return filter.current.offsetWidth - labelWidth - 250;
+    return filter.current.offsetWidth - labelWidth - 280;
   };
 
   const options = arr.map(o => 

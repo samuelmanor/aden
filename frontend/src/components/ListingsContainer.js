@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Listing from "./Listing";
+import SearchHeader from "./SearchHeader";
 import { useRef, useState } from "react";
 
 const Container = styled.div`
@@ -10,17 +11,6 @@ const Container = styled.div`
   flex-wrap: wrap;
   justify-content: space-evenly;
   gap: 1em;
-`
-
-const QueryTitle = styled.p`
-  color: black;
-  background-color: rgb(247, 247, 242);
-  font-size: 30px;
-`
-
-const Query = styled.p`
-  font-size: 40px;
-  padding-left: 1em;
 `
 
 const SmallListing = styled.div`
@@ -110,10 +100,8 @@ const ListingsContainer = ({ listings, setDisplayed, query }) => {
 
   return (
     <div>
-      <QueryTitle>results for</QueryTitle>
-      <Query>
-          <strong>{query[0]} {query[1]}</strong> near <strong>{query[2]}</strong>
-      </Query>
+
+      <SearchHeader selected={selected} query={selected ? [] : query} />
 
       <Listing listing={selected} toggleExpand={() => setSelected(null)} />
 

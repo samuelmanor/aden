@@ -25,7 +25,7 @@ const Options = styled.div`
   cursor: pointer;
   position: absolute;
   right: 11.2em;
-  margin-top: 4.05em;
+  margin-top: 4.04em;
   border: 2px solid rgb(247, 247, 242);
 `
 

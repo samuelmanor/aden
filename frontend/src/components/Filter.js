@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import listingService from '../services/listings';
 import Dropdown from './Dropdown';
-import ListingsContainer from './ListingsContainer';
 import styled from "styled-components";
 
 const Button = styled.button`
@@ -19,7 +18,6 @@ const Button = styled.button`
 `
 
 const Filter = ({ setListings, setDisplayed, setQuery }) => {
-  // const [listings, setListings] = useState([]);
   const [filterOptions, setFilterOptions] = useState({});
 
   const [identitySel, setIdentitySel] = useState('');
@@ -29,7 +27,6 @@ const Filter = ({ setListings, setDisplayed, setQuery }) => {
   const [activeQuery, setActiveQuery] = useState(false);
 
   const filterRef = useRef();
-  // const listingsRef = useRef();
 
   useEffect(() => {
     listingService
@@ -44,12 +41,6 @@ const Filter = ({ setListings, setDisplayed, setQuery }) => {
       });
   }, []);
 
-  // const scrollToResults = () => {
-  //   setTimeout(() => {
-  //     // listingsRef.current.scrollIntoView({ behavior: 'smooth' });
-  //   }, 10);
-  // };
-
   const getListings = () => {
     listingService
       .search({
@@ -61,7 +52,6 @@ const Filter = ({ setListings, setDisplayed, setQuery }) => {
         setListings(returnedListings);
         setDisplayed('listings');
         setQuery([ identitySel, serviceSel, locationSel ]);
-        // scrollToResults();
       });
   };
 
@@ -85,10 +75,6 @@ const Filter = ({ setListings, setDisplayed, setQuery }) => {
 
         { activeQuery ? <Button onClick={getListings}>search</Button> : null }
       </div>
-
-      {/* <div ref={listingsRef}>
-        <ListingsContainer listings={listings} />
-      </div> */}
     </div>
   )
 };

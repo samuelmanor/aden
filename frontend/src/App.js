@@ -6,6 +6,7 @@ import ListingsContainer from './components/ListingsContainer';
 import Profile from "./components/Profile";
 
 import './App.css'
+import Header from './components/Header';
 
 const App = () => {
   const [displayed, setDisplayed] = useState('filter');
@@ -24,11 +25,7 @@ const App = () => {
 
   return (
     <div>
-      <div>
-        <p>about</p>
-        <h1 onClick={() => setDisplayed('filter')}>aden</h1>
-        <p>profile</p>
-      </div>
+      <Header setDisplayed={setDisplayed} />
 
       <MainContainer>
         {toggleMain()}

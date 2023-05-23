@@ -35,11 +35,13 @@ const Name = styled.p`
   height: 2.5em;
   // color: rgb(247, 247, 242);
   padding: 1em;
+  padding-bottom: 0;
   font-size: 28px;
   cursor: pointer;
 `
 
 const Address = styled.p`
+  height: 2em;
   font-size: 18px;
   margin: 0;
 `
@@ -55,6 +57,24 @@ const Info = styled.p`
   user-select: none;
 `
 
+const NoResults = styled.div`
+  height: 18em;
+  margin-top: 1em;
+  color: black;
+  font-size: 20px;
+`
+
+const ReturnButton = styled.button`
+  background-color: transparent;
+  font-style: 'Epilogue', sans-serif;
+  font-size: 15px;
+  border: 1px solid black;
+  display: block;
+  margin: 0 auto;
+  margin-top: 1em;
+  cursor: pointer;
+`
+
 const ListingsContainer = ({ listings, setDisplayed, query }) => {
   const [selected, setSelected] = useState(null);
 
@@ -62,39 +82,43 @@ const ListingsContainer = ({ listings, setDisplayed, query }) => {
 
   if (!listings) {
     return null;
-  };
+  }
 
   const expandListing = (listing) => {
     setSelected(listing);
     setTimeout(() => {
-      // containerRef.current.scrollIntoView({ behavior: 'smooth' });
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }, 10);
   };
 
+  const apology = 
+    <NoResults>
+      sorry, nothing found!
+      <ReturnButton onClick={() => setDisplayed('filter')}>back to search</ReturnButton>
+    </NoResults>
+
+  const smallListings = listings.map(l => 
+    <SmallListing key={l.id}>
+      <Name onClick={() => expandListing(l)}>{l.name}</Name>
+
+      <Address>{l.address}</Address>
+
+      <Description>{l.description.length > 350 ? `${l.description.substring(0, 350)}...` : l.description}</Description>
+
+      <Info>{l.comments.length === 1 ? `${l.comments.length} comment` : `${l.comments.length} comments`}</Info>
+    </SmallListing>)
+
   return (
     <div>
-
       <QueryTitle>results for</QueryTitle>
       <Query>
           <strong>{query[0]} {query[1]}</strong> near <strong>{query[2]}</strong>
       </Query>
 
-      <button onClick={() => setDisplayed('filter')}>back to search</button>
-
       <Listing listing={selected} toggleExpand={() => setSelected(null)} />
 
       <Container ref={containerRef} style={{ display: selected ? 'none' : '' }}>
-        {listings.map(l => 
-          <SmallListing key={l.id}>
-            <Name onClick={() => expandListing(l)}>{l.name}</Name>
-
-            <Address>{l.address}</Address>
-
-            <Description>{l.description.length > 350 ? `${l.description.substring(0, 350)}...` : l.description}</Description>
-
-            <Info>{l.comments.length === 1 ? `${l.comments.length} comment` : `${l.comments.length} comments`}</Info>
-          </SmallListing>)}
+          {listings.length === 0 ? apology : smallListings}
       </Container>
     </div>
   )

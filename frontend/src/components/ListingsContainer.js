@@ -106,6 +106,8 @@ const ListingsContainer = ({ listings, setDisplayed, query }) => {
       <Container ref={containerRef} style={{ display: selected ? 'none' : '' }}>
           {listings.length === 0 ? apology : smallListings}
       </Container>
+
+      {selected ? null : <ReturnButton onClick={() => setDisplayed('filter')}>back to search</ReturnButton>}
     </div>
   )
 }

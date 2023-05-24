@@ -23,7 +23,6 @@ const SmallListing = styled.div`
 
 const Name = styled.p`
   height: 2.5em;
-  // color: rgb(247, 247, 242);
   padding: 1em;
   padding-bottom: 0;
   font-size: 28px;

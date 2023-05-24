@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const Title = styled.p`
+const QueryTitle = styled.p`
   color: black;
   background-color: rgb(247, 247, 242);
   font-size: 30px;
@@ -11,10 +11,17 @@ const Query = styled.p`
   padding-left: 1em;
 `
 
+const Name = styled.p`
+  font-size: 40px;
+  margin: 0;
+  padding: 1em;
+  padding-bottom: 0.5em;
+`
+
 const SearchHeader = ({ selected, query }) => {
   const results = 
     <div>
-      <Title>results for</Title>
+      <QueryTitle>results for</QueryTitle>
 
       <Query>
           <strong>{query[0]} {query[1]}</strong> near <strong>{query[2]}</strong>
@@ -22,9 +29,9 @@ const SearchHeader = ({ selected, query }) => {
     </div>
 
   const listingName = 
-    <div>
+    <Name>
       {selected ? selected.name : null}
-    </div>
+    </Name>
     
   return (
     <div>

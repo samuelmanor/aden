@@ -2,6 +2,10 @@ body {
   background-color: rgb(247, 247, 242);
 }
 
+a {
+  color: black;
+}
+
 .gradient-bg {
   background: linear-gradient(-45deg, #ea858c, #f0a8ad, #72a8d5, #5295cb);
   background-size: 250% 250%;

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Comments from "./Comments";
 
 const Container = styled.div`
   background-color: rgb(247, 247, 242);
@@ -79,6 +80,8 @@ const Listing = ({ listing, toggleExpand }) => {
       </Container>
 
       <User>posted by {listing.user.name} - @{listing.user.username}</User>
+
+      <Comments comments={listing.comments} />
     </div>
   )
 }

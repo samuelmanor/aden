@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Filter from "./components/Filter";
 import MainContainer from "./components/MainContainer";
@@ -6,12 +6,23 @@ import ListingsContainer from './components/ListingsContainer';
 import Profile from "./components/Profile";
 import Header from './components/Header';
 
+import listingService from './services/listings';
 import './App.css'
 
 const App = () => {
   const [displayed, setDisplayed] = useState('filter');
   const [listings, setListings] = useState([]);
   const [query, setQuery] = useState([]);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedAdenUser');
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      listingService.setToken(user.token);
+    }
+  }, [setUser])
 
   const toggleMain = () => {
     if (displayed === 'filter') {
@@ -25,7 +36,7 @@ const App = () => {
 
   return (
     <div>
-      <Header setDisplayed={setDisplayed} />
+      <Header setDisplayed={setDisplayed} user={user} setUser={setUser}  />
 
       <MainContainer>
         {toggleMain()}

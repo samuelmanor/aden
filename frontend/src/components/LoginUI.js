@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import loginService from '../services/login';
+import listingService from '../services/listings';
 
 const Container = styled.div`
   position: absolute;
@@ -27,28 +28,36 @@ const Button = styled.button`
   font-family: 'Epilogue', sans-serif;
 `
 
-const LoginUI = ({ tab }) => {
+const LoginUI = ({ user, setUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    console.log(user)
-  }, [user])
+  // useEffect(() => {
+  //   console.log(user)
+  // }, [user])
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    // console.log('logging in with', username, password);
 
     try {
       const user = await loginService.login({ username, password });
+
+      window.localStorage.setItem('loggedAdenUser', JSON.stringify(user));
+
+      listingService.setToken(user.token);
+
       setUser(user);
       setUsername('');
       setPassword('');
     } catch (exception) {
       console.log(exception)
     }
-  }
+  };
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedAdenUser');
+    setUser(null);
+  };
 
   const loginForm = (
     <form onSubmit={handleLogin}>
@@ -60,11 +69,18 @@ const LoginUI = ({ tab }) => {
 
       <Button type='submit'>log in</Button>
     </form>
-  )
+  );
+
+  const profileForm = (
+    <div>
+      <p onClick={handleLogout}>log out</p>
+      <button onClick={() => console.log(user)}>cl</button>
+    </div>
+  );
 
   return (
     <Container>
-      {user === null ? loginForm : null}
+      {user === null ? loginForm : profileForm}
     </Container>
   )
 }

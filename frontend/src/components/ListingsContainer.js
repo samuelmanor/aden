@@ -99,7 +99,6 @@ const ListingsContainer = ({ listings, setDisplayed, query }) => {
 
   return (
     <div>
-
       <SearchHeader selected={selected} query={selected ? [] : query} />
 
       <Listing listing={selected} toggleExpand={() => setSelected(null)} />

@@ -5,22 +5,21 @@ const Container = styled.div`
   border: 1px solid black;
   border-top: 0;
   color: black;
-  min-height: 25em;
+  min-height: 27.5em;
 `
 
-// const ButtonContainer = styled.div`
-//   // background-color: red;
-//   // position: absolute;
-// `
+const ButtonContainer = styled.div`
+  margin: 0.5em 0.5em 0 0;
+  float: right;
+`
 
-// const Button = styled.button`
-//   background-color: transparent;
-//   border: none;
-//   color: rgb(247, 247, 242);
-//   font-size: 35px;
-//   cursor: pointer;
-//   margin: 10px;
-// `
+const Button = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 35px;
+  cursor: pointer;
+  margin: 10px;
+`
 
 const User = styled.p`
   font-size: 20px;
@@ -40,7 +39,7 @@ const Description = styled.p`
   margin: 0 auto;
   font-size: 20px;
   padding: 1em;
-  height: 10.5em;
+  height: 12em;
   overflow: scroll;
 `
 
@@ -61,11 +60,11 @@ const Listing = ({ listing, toggleExpand }) => {
   return (
     <div>
       <Container>
-        {/* <ButtonContainer>
-          <Button>☆</Button> <- favorite button
+        <ButtonContainer>
+          {/* <Button>☆</Button> */}
 
           <Button onClick={toggleExpand}>╳</Button>
-        </ButtonContainer> */}
+        </ButtonContainer>
 
         <Address>{listing.address}</Address>
 

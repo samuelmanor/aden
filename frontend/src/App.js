@@ -4,9 +4,9 @@ import Filter from "./components/Filter";
 import MainContainer from "./components/MainContainer";
 import ListingsContainer from './components/ListingsContainer';
 import Profile from "./components/Profile";
+import Header from './components/Header';
 
 import './App.css'
-import Header from './components/Header';
 
 const App = () => {
   const [displayed, setDisplayed] = useState('filter');

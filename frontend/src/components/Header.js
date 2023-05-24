@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import LoginUI from "./LoginUI";
+import { useRef, useState } from "react";
 
 const Container = styled.div`
   display: flex;
@@ -28,13 +30,21 @@ const Tab = styled.p`
 `
 
 const Header = ({ setDisplayed }) => {
+  const [showLoginUI, toggleShowLoginUi] = useState(false);
+
+  const profileRef = useRef();
+
   return (
     <Container>
       <Tab>add a post</Tab>
 
       <Title onClick={() => setDisplayed('filter')}>aden</Title>
       
-      <Tab>profile</Tab>
+      <Tab onClick={() => toggleShowLoginUi(!showLoginUI)} ref={profileRef}>
+        profile
+      </Tab>
+
+      {showLoginUI ? <LoginUI tab={profileRef.current} /> : null}
     </Container>
   )
 }

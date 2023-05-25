@@ -53,7 +53,7 @@ const Info = styled.p`
   font-size: 25px;
 `
 
-const Listing = ({ listing, toggleExpand }) => {
+const Listing = ({ listing, toggleExpand, user }) => {
   if (!listing) {
     return null
   };

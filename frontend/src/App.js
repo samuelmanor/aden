@@ -8,6 +8,7 @@ import Header from './components/Header';
 
 import listingService from './services/listings';
 import './App.css'
+import NewListing from './components/NewListing';
 
 const App = () => {
   const [displayed, setDisplayed] = useState('filter');
@@ -31,6 +32,8 @@ const App = () => {
       return <Profile />
     } else if (displayed === 'listings') {
       return <ListingsContainer listings={listings} setDisplayed={setDisplayed} query={query} user={user} />
+    } else if (displayed === 'new') {
+      return <NewListing user={user} />
     }
   };
 

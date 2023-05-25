@@ -34,7 +34,7 @@ const Header = ({ setDisplayed, user, setUser }) => {
 
   return (
     <Container>
-      <Tab>add a post</Tab>
+      <Tab onClick={() => setDisplayed('new')}>add a post</Tab>
 
       <Title onClick={() => setDisplayed('filter')}>aden</Title>
       

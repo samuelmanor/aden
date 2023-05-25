@@ -64,7 +64,7 @@ const ReturnButton = styled.button`
   cursor: pointer;
 `
 
-const ListingsContainer = ({ listings, setDisplayed, query }) => {
+const ListingsContainer = ({ listings, setDisplayed, query, user }) => {
   const [selected, setSelected] = useState(null);
 
   const containerRef = useRef();
@@ -83,6 +83,7 @@ const ListingsContainer = ({ listings, setDisplayed, query }) => {
   const apology = 
     <NoResults>
       sorry, nothing found!
+      {user !== null ? 'please make a post if you have something to add!' : ''}
       <ReturnButton onClick={() => setDisplayed('filter')}>back to search</ReturnButton>
     </NoResults>
 
@@ -101,7 +102,7 @@ const ListingsContainer = ({ listings, setDisplayed, query }) => {
     <div>
       <SearchHeader selected={selected} query={selected ? [] : query} />
 
-      <Listing listing={selected} toggleExpand={() => setSelected(null)} />
+      <Listing listing={selected} toggleExpand={() => setSelected(null)} user={user} />
 
       <Container ref={containerRef} style={{ display: selected ? 'none' : '' }}>
           {listings.length === 0 ? apology : smallListings}

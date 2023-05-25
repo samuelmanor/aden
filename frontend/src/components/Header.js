@@ -39,7 +39,7 @@ const Header = ({ setDisplayed, user, setUser }) => {
       <Title onClick={() => setDisplayed('filter')}>aden</Title>
       
       <Tab onClick={() => toggleShowLoginUi(!showLoginUI)} >
-        {user === null ? 'profile' : user._doc.name}
+        {user === null ? 'log in' : user._doc.name}
       </Tab>
 
       {showLoginUI ? <LoginUI user={user} setUser={setUser} /> : null}

@@ -30,7 +30,7 @@ const App = () => {
     } else if (displayed === 'profile') {
       return <Profile />
     } else if (displayed === 'listings') {
-      return <ListingsContainer listings={listings} setDisplayed={setDisplayed} query={query} />
+      return <ListingsContainer listings={listings} setDisplayed={setDisplayed} query={query} user={user} />
     }
   };
 

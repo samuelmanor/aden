@@ -8,41 +8,65 @@ const Message = styled.p`
   padding-top: 8em;
 `
 
+const Option = styled.div`
+  border: 1px solid ${props => props.$selected};
+  cursor: pointer;
+`
+
 const NewListing = ({ user }) => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
   const [website, setWebsite] = useState('');
-  const [number, setNumber] = useState('');
-
-  const [identOptions, setIdentOptions] = useState(null);
-  const [servOptions, setServOptions] = useState(null);
-  const [locOptions, setLocOptions] = useState(null);
+  const [phone, setPhone] = useState('');
 
   const [identity, setIdentity] = useState('');
   const [service, setService] = useState('');
   const [location, setLocation] = useState('');
 
+  const [options, setOptions] = useState(null);
+
   useEffect(() => {
     listingService
       .getFilters()
       .then(returnedFilters => {
-        setIdentOptions(mapOptions(["transmasc", "transfem", "both"], 'identity'));
-        setServOptions(mapOptions(returnedFilters.services), 'service');
-        setLocOptions(mapOptions(returnedFilters.locations), 'location');
+        setOptions({
+          identities: mapOptions(['transmasc', 'transfem', 'both'], identity, setIdentity),
+          services: mapOptions(returnedFilters.services, service, setService),
+          locations: mapOptions(returnedFilters.locations, location, setLocation)
+        })
       });
-  }, []);
+  }, [identity, location, service]);
+
+  useEffect(() => {
+    console.log(identity, service, location)
+  }, [identity, service, location])
 
   const createListing = (e) => {
     e.preventDefault();
+    const newObj = {
+      name,
+      address,
+      description,
+      website,
+      phone,
+      identity,
+      location,
+      service
+    };
+
+    console.log(newObj);
   };
 
-  const mapOptions = (options, name) => {
+  const mapOptions = (options, type, set) => {
     return options.map(o => <div>
-      <input key={`${o}input`} type='radio' id={o} name={name} />
-      <label key={`${o}label`} htmlFor={o}>{o}</label>
+      <Option 
+        onClick={() => set(o)} 
+        $selected={type === o ? 'white' : 'transparent'}>
+      {o}
+      </Option>
     </div>)
-  }
+  };
 
   const form = 
     <form onSubmit={createListing}>
@@ -59,16 +83,16 @@ const NewListing = ({ user }) => {
       <input value={website} onChange={(e) => setWebsite(e.target.value)} />
 
       <p>phone number:</p>
-      <input value={number} onChange={(e) => setNumber(e.target.value)} />
+      <input value={phone} onChange={(e) => setPhone(e.target.value)} />
 
       <p>target audience:</p>
-      {identOptions}
+      {options ? options.identities : null}
 
       <p>service provided:</p>
-      {servOptions}
+      {options ? options.services : null}
 
       <p>nearest location:</p>
-      {locOptions}
+      {options ? options.locations : null}
 
       <button type='submit'>post</button>
     </form>

@@ -22,7 +22,7 @@ const getFilters = () => {
   return req.then(res => res.data);
 };
 
-const create = async newObj => {
+const create = async (newObj) => {
   const config = {
     headers: { Authorization: token }
   };

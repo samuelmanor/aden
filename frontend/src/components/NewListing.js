@@ -25,6 +25,8 @@ const NewListing = ({ user }) => {
   const [location, setLocation] = useState('');
 
   const [options, setOptions] = useState(null);
+  const [notif, setNotif] = useState('you must be logged in to add a post.');
+  const [showMessage, toggleShowMessage] = useState(user === null ? true : false);
 
   useEffect(() => {
     listingService
@@ -55,7 +57,26 @@ const NewListing = ({ user }) => {
       service
     };
 
-    console.log(newObj);
+    listingService.create(newObj)
+      .then(returnedBlog => {
+        console.log(returnedBlog);
+
+        setNotif(`created ${name}!`);
+
+        setName('');
+        setAddress('');
+        setDescription('');
+        setWebsite('');
+        setPhone('');
+        setIdentity('');
+        setService('');
+        setLocation('');
+
+        toggleShowMessage(true);
+        setTimeout(() => {
+          toggleShowMessage(false);
+        }, 10000);
+      })
   };
 
   const mapOptions = (options, type, set) => {
@@ -97,11 +118,11 @@ const NewListing = ({ user }) => {
       <button type='submit'>post</button>
     </form>
 
-  const message = <Message>you must be logged in to add a post.</Message>
+  const message = <Message>{notif}</Message>
 
   return (
     <div>
-      {user !== null ? form : message}
+      {showMessage ? message : form}
     </div>
   )
 }

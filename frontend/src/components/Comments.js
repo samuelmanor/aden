@@ -46,9 +46,9 @@ const Comments = ({ arr, listingId, token }) => {
 
   const commentMap = comments.map(c => 
     <div key={c.id} style={{ color: 'black' }}>
-      
+      <p>{c.user.name} @{c.user.username}</p>
       <p>{c.content}</p>
-      <button onClick={() => console.log(c)}>cl comment</button>
+      {/* <button onClick={() => console.log(c)}>cl comment</button> */}
     </div>);
   
   const commentForm = <form onSubmit={(e) => postComment(e)}>
@@ -62,7 +62,7 @@ const Comments = ({ arr, listingId, token }) => {
     <Container>
       <Title>{arr.length} Comment{arr.length === 1 ? '' : 's'}</Title>
 
-      {/* <button onClick={() => console.log(arr)}>cl</button> */}
+      {/* <button onClick={() => console.log(arr)}>cl all comments</button> */}
 
       {commentMap}
 

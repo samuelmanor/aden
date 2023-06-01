@@ -79,7 +79,7 @@ const Listing = ({ listing, toggleExpand, user }) => {
 
       </Container>
 
-      {/* <User>posted by {listing.user.name} - @{listing.user.username}</User> */}
+      <User>posted by {listing.user.name} - @{listing.user.username}</User>
       <button onClick={() => console.log(listing)}>cl</button>
 
       <Comments arr={listing.comments} listingId={listing.id} token={user.token} />

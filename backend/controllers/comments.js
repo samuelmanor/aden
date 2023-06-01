@@ -26,8 +26,8 @@ commentsRouter.post('/', async (req, res, next) => {
 
 	const comment = new Comment({
 		content: body.content,
-		user: user.id,
-		listing: listing.id
+		user: user._id,
+		listing: listing._id
 	});
 
 	const savedComment = await comment.save();

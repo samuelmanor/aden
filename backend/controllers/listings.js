@@ -40,7 +40,7 @@ listingsRouter.post('/search', async (req, res) => {
 		.populate({
 			path: 'comments',
 			// model: 'Comment',
-			// populate: { path: 'user', model: 'User' } // <- user who posted comment under listing
+			populate: { path: 'user' } // <- user who posted comment under listing
 		})
 
 	res.json(listings);

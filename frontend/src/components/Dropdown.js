@@ -24,7 +24,7 @@ const Options = styled.div`
   overflow: scroll;
   cursor: pointer;
   position: absolute;
-  right: 11.2em;
+  right: 8em;
   margin-top: 4.04em;
   border: 2px solid rgb(247, 247, 242);
 `
@@ -76,7 +76,7 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
 
       <Current style={{ width: currentWidth() }} onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</Current>
 
-      <Options style={{ width: currentWidth(), display: show ? '' : 'none' }}>
+      <Options style={{ width: currentWidth() + 10, display: show ? '' : 'none' }}>
         {options}
       </Options>
 

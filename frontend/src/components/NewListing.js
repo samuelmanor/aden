@@ -19,7 +19,6 @@ const NewListing = ({ user }) => {
   const [description, setDescription] = useState('');
   const [website, setWebsite] = useState('');
   const [phone, setPhone] = useState('');
-
   const [identity, setIdentity] = useState('');
   const [service, setService] = useState('');
   const [location, setLocation] = useState('');
@@ -38,11 +37,11 @@ const NewListing = ({ user }) => {
           locations: mapOptions(returnedFilters.locations, location, setLocation)
         })
       });
-  }, [identity, location, service]);
+  });
 
-  useEffect(() => {
-    console.log(identity, service, location)
-  }, [identity, service, location])
+  // useEffect(() => {
+  //   console.log(identity, service, location)
+  // }, [identity, service, location])
 
   const createListing = (e) => {
     e.preventDefault();
@@ -58,9 +57,8 @@ const NewListing = ({ user }) => {
     };
 
     listingService.create(newObj)
-      .then(returnedBlog => {
-        console.log(returnedBlog);
-
+      .then(returnedListing => {
+        // console.log(returnedListing);
         setNotif(`created ${name}!`);
 
         setName('');

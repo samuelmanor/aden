@@ -60,7 +60,7 @@ const Comments = ({ arr, listingId, token }) => {
 
   return (
     <Container>
-      <Title>{arr.length} Comment{arr.length === 1 ? '' : 's'}</Title>
+      <Title>{comments.length} Comment{comments.length === 1 ? '' : 's'}</Title>
 
       {/* <button onClick={() => console.log(arr)}>cl all comments</button> */}
 

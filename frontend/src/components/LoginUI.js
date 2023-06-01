@@ -6,7 +6,7 @@ import listingService from '../services/listings';
 const Container = styled.div`
   position: absolute;
   background-color: rgb(247, 247, 242);
-  right: 5.5em;
+  right: 4.5em;
   margin-top: 13em;
   width: 12em;
   border: 1px solid black;

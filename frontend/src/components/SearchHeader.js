@@ -6,9 +6,10 @@ const QueryTitle = styled.p`
   font-size: 30px;
 `
 
-const Query = styled.p`
+const Query = styled.div`
   font-size: 40px;
   padding-left: 1em;
+  height: 1.5em;
 `
 
 const Name = styled.p`
@@ -18,13 +19,18 @@ const Name = styled.p`
   padding-bottom: 0.5em;
 `
 
+const Bold = styled.p`
+  font-weight: 600;
+  display: inline;
+`
+
 const SearchHeader = ({ selected, query }) => {
   const results = 
     <div>
       <QueryTitle>results for</QueryTitle>
 
       <Query>
-          <strong>{query[0]} {query[1]}</strong> near <strong>{query[2]}</strong>
+          <Bold>{query[0]} {query[1]}</Bold> near <Bold>{query[2]}</Bold>
       </Query>
     </div>
 

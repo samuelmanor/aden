@@ -35,6 +35,8 @@ commentsRouter.post('/', async (req, res, next) => {
 	listing.comments = listing.comments.concat(savedComment._id);
 	await listing.save();
 
+  console.log(savedComment);
+
 	res.json(savedComment);
 });
 

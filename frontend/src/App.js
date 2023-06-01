@@ -23,7 +23,21 @@ const App = () => {
       setUser(user);
       listingService.setToken(user.token);
     }
-  }, [setUser])
+  }, [setUser]);
+
+  useEffect(() => {
+    console.log(`
+      things to do:
+        - add redux
+        - add profile page/functionality
+        - user crud
+        - comment crud
+        - react component tests
+        - returned listing styling
+        - add cypress
+        - add react router?
+    `)
+  }, []);
 
   const toggleMain = () => {
     if (displayed === 'filter') {

@@ -31,13 +31,23 @@ listingsRouter.get('/filters', async (req, res) => {
 	res.json(filters);
 });
 
-listingsRouter.post('/search', async (req, res) => { // in body: identity, service, location
-	const listings = await Listing.find({ identity: { $in: [ 'both', req.body.identity.toString() ] }, service: req.body.service.toString(), location: req.body.location.toString() }).populate('user');
+listingsRouter.post('/search', async (req, res) => {
+	const listings = await Listing.find(
+		{ identity: { $in: [ 'both', req.body.identity ] }, 
+			service: req.body.service, 
+			location: req.body.location })
+		.populate('user') // <- user who posted the listing itself
+		.populate({
+			path: 'comments',
+			// model: 'Comment',
+			// populate: { path: 'user', model: 'User' } // <- user who posted comment under listing
+		})
+
 	res.json(listings);
 });
 
 listingsRouter.get('/:id', async (req, res) => {
-	const listing = await Listing.findById(req.params.id).populate('comments', { content: 1, user: 1 });
+	const listing = await Listing.findById(req.params.id);
 
 	if (listing) {
 		res.json(listing);

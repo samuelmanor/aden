@@ -10,24 +10,18 @@ const Profile = ({ user }) => {
 
   const editUser = (e) => {
     e.preventDefault();
-
     setEditingState(false);
 
     usersService.setToken(currentUser.token);
 
-    console.log(currentUser)
-
-    usersService.update(currentUser._doc._id, { name, bio })
-      .then((returnedUser) => {
-        console.log(returnedUser);
-      })
+    usersService.update(currentUser._doc._id, { name, bio });
   };
 
   const editForm = <form onSubmit={(e) => editUser(e)}>
     <p>name:</p>
     <input value={name} onChange={({ target }) => setName(target.value)} />
 
-    <p>{user._doc.username}</p>
+    <p>{currentUser._doc.username}</p>
 
     <p>bio:</p>
     <input value={bio} onChange={({ target }) => setBio(target.value)} />
@@ -36,11 +30,10 @@ const Profile = ({ user }) => {
   </form>
 
   const profile = <div>
-    <p>{user._doc.name}</p>
-    <p>@{user._doc.username}</p>
-    <p>{user._doc.bio}</p>
+    <p>{name}</p>
+    <p>@{currentUser._doc.username}</p>
+    <p>{bio}</p>
     <button onClick={() => setEditingState(true)}>edit</button>
-    <button onClick={() => console.log(user._doc)}>cl</button>
   </div>
 
   return (

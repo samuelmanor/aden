@@ -31,7 +31,6 @@ const App = () => {
         - add redux
         - add profile page/functionality
         - user crud
-        - comment crud
         - react component tests
         - returned listing styling
         - add cypress

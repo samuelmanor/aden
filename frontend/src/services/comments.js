@@ -25,6 +25,19 @@ const update = async (id, newObj) => {
   return req.data;
 };
 
-const exportObj = { create, update, setToken };
+const remove = async (id, obj) => {
+  const req = await axios.delete(`${baseUrl}/${id}`, {
+    headers: {
+      Authorization: token
+    },
+    data: {
+      listingId: obj
+    }
+  });
+
+  return req.data;
+};
+
+const exportObj = { create, update, remove, setToken };
 
 export default exportObj;

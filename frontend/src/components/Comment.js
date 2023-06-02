@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import commentService from '../services/comments';
 
-const Comment = ({ comment, user }) => {
+const Comment = ({ comment, user, listingId, updateCommentsArr }) => {
   const [editingState, setEditingState] = useState(false);
   const [content, setContent] = useState(comment.content);
 
@@ -11,18 +11,28 @@ const Comment = ({ comment, user }) => {
     commentService.setToken(user.token);
 
     commentService.update(comment.id, {content})
-      .then(returnedComment => {
+      .then(() => {
         setEditingState(false);
+      });
+  };
+
+  const deleteComment = () => {
+    commentService.setToken(user.token);
+
+    commentService.remove(comment.id, listingId)
+      .then(() => {
+        updateCommentsArr(comment.id);
       });
   };
 
   const staticComment = <div>
     {comment.user.username === user._doc.username ? <button onClick={() => setEditingState(true)}>edit</button> : null}
 
+    {comment.user.username === user._doc.username ? <button onClick={deleteComment}>delete</button> : null}
+
     <p>{comment.user.name} @{comment.user.username}</p>
 
     <p>{content}</p>
-    <button onClick={() => console.log(user.token)}>cl</button>
   </div>
 
   const editForm = <form onSubmit={(e) => editComment(e)}>
@@ -34,7 +44,7 @@ const Comment = ({ comment, user }) => {
   </form>
 
   return (
-    <div style={{ color: 'black' }}>
+    <div>
       {editingState === false ? staticComment : editForm}
     </div>
   )

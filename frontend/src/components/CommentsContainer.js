@@ -45,10 +45,15 @@ const CommentsContainer = ({ arr, listingId, user }) => {
       });
   };
 
-  const commentArr = comments.map(c => <Comment key={c.id} comment={c} user={user} />);
+  const updateCommentsArr = (deletedId) => {
+    const newState = comments.filter(c => c.id !== deletedId);
+    setComments(newState);
+  }
+
+  const commentArr = comments.map(c => <Comment key={c.id} comment={c} user={user} listingId={listingId} updateCommentsArr={updateCommentsArr} />);
   
   const postForm = <form onSubmit={(e) => postComment(e)}>
-    <p style={{ color: 'black' }}>add a comment</p>
+    <p>add a comment</p>
 
     <input type='text' value={content} onChange={({ target }) => setContent(target.value)} />
 
@@ -59,11 +64,9 @@ const CommentsContainer = ({ arr, listingId, user }) => {
     <Container>
       <Title>{comments.length} Comment{comments.length === 1 ? '' : 's'}</Title>
 
-      {/* <button onClick={() => console.log(arr)}>cl all comments</button> */}
-
       {commentArr}
 
-      {postForm}
+      {user !== null ? postForm : <p>you must be logged in to add a comment.</p>}
     </Container>
   )
 }

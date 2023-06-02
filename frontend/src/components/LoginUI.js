@@ -16,6 +16,7 @@ const Container = styled.div`
   font-size: 20px;
   height: 7em;
   text-align: center;
+  z-index: 1;
 `
 
 const Input = styled.input`

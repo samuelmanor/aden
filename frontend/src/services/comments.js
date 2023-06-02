@@ -16,6 +16,15 @@ const create = async (newObj) => {
   return res.data;
 };
 
-const exportObj = { create, setToken };
+const update = async (id, newObj) => {
+  const config = {
+    headers: { Authorization: token }
+  };
+
+  const req = await axios.patch(`${baseUrl}/${id}`, newObj, config);
+  return req.data;
+};
+
+const exportObj = { create, update, setToken };
 
 export default exportObj;

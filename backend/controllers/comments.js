@@ -40,7 +40,7 @@ commentsRouter.post('/', async (req, res, next) => {
 	res.json(savedComment);
 });
 
-commentsRouter.put('/:id', async (req, res, next) => {
+commentsRouter.patch('/:id', async (req, res, next) => {
 	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
 
 	if (!decodedToken.id) {

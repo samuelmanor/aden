@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import commentService from '../services/comments';
+import Comment from "./Comment";
 
 const Container = styled.div`
   // background-color: red;
@@ -20,14 +21,14 @@ const Title = styled.p`
 
 // `
 
-const Comments = ({ arr, listingId, token }) => {
+const CommentsContainer = ({ arr, listingId, user }) => {
   const [content, setContent] = useState('');
   const [comments, setComments] = useState(arr);
 
   const postComment = (e) => {
     e.preventDefault();
 
-    commentService.setToken(token);
+    commentService.setToken(user.token);
 
     const commentObj = {
       listingId,
@@ -44,17 +45,13 @@ const Comments = ({ arr, listingId, token }) => {
       });
   };
 
-  const commentMap = comments.map(c => 
-    <div key={c.id} style={{ color: 'black' }}>
-      <p>{c.user.name} @{c.user.username}</p>
-      <p>{c.content}</p>
-      {/* <button onClick={() => console.log(c)}>cl comment</button> */}
-    </div>);
+  const commentArr = comments.map(c => <Comment key={c.id} comment={c} user={user} />);
   
-  const commentForm = <form onSubmit={(e) => postComment(e)}>
+  const postForm = <form onSubmit={(e) => postComment(e)}>
     <p style={{ color: 'black' }}>add a comment</p>
 
     <input type='text' value={content} onChange={({ target }) => setContent(target.value)} />
+
     <button type='submit'>post</button>
   </form>
 
@@ -64,11 +61,11 @@ const Comments = ({ arr, listingId, token }) => {
 
       {/* <button onClick={() => console.log(arr)}>cl all comments</button> */}
 
-      {commentMap}
+      {commentArr}
 
-      {commentForm}
+      {postForm}
     </Container>
   )
 }
 
-export default Comments;
+export default CommentsContainer;

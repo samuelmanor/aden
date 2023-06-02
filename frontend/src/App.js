@@ -42,7 +42,7 @@ const App = () => {
     if (displayed === 'filter') {
       return <Filter setListings={setListings} setDisplayed={setDisplayed} setQuery={setQuery} />
     } else if (displayed === 'profile') {
-      return <Profile />
+      return <Profile user={user} />
     } else if (displayed === 'listings') {
       return <ListingsContainer listings={listings} setDisplayed={setDisplayed} query={query} user={user} />
     } else if (displayed === 'new') {

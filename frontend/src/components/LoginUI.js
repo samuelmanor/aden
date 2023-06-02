@@ -38,7 +38,7 @@ const Button = styled.button`
   cursor: pointer;
 `
 
-const LoginUI = ({ user, setUser }) => {
+const LoginUI = ({ user, setUser, setDisplayed }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -62,6 +62,7 @@ const LoginUI = ({ user, setUser }) => {
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedAdenUser');
+    setDisplayed('filter');
     setUser(null);
   };
 
@@ -79,7 +80,7 @@ const LoginUI = ({ user, setUser }) => {
 
   const profileForm = (
     <div>
-      <p>profile</p>
+      <p onClick={() => setDisplayed('profile')}>profile</p>
       <p onClick={handleLogout}>log out</p>
     </div>
   );

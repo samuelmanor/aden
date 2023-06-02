@@ -46,7 +46,7 @@ usersRouter.post('/', async (req, res) => {
 	res.status(201).json(savedUser);
 });
 
-usersRouter.patch('/:id', async (req, res, next) => {
+usersRouter.put('/:id', async (req, res, next) => {
 	const body = req.body;
 
 	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
@@ -62,10 +62,7 @@ usersRouter.patch('/:id', async (req, res, next) => {
 		return res.status(401).json({ error: 'unauthorized user' });
 	}
 
-	User.findByIdAndUpdate(req.params.id, {
-		name: body.name,
-		bio: body.bio
-	}, { new: true })
+	User.findByIdAndUpdate(req.params.id, body, { new: true })
 		.then(updatedUser => {
 			res.json(updatedUser);
 		})

@@ -27,7 +27,6 @@ const User = styled.p`
   color: black;
   text-align: center;
   user-select: none;
-  cursor: pointer;
 `
 
 const Address = styled.p`

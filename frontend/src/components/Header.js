@@ -42,7 +42,7 @@ const Header = ({ setDisplayed, user, setUser }) => {
         {user === null ? 'log in' : user._doc.name}
       </Tab>
 
-      {showLoginUI ? <LoginUI user={user} setUser={setUser} /> : null}
+      {showLoginUI ? <LoginUI user={user} setUser={setUser} setDisplayed={setDisplayed} /> : null}
     </Container>
   )
 }

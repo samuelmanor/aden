@@ -3,6 +3,9 @@ import styled from "styled-components";
 import commentService from '../services/comments';
 import Comment from "./Comment";
 
+import { useDispatch } from 'react-redux';
+import { createComment } from "../reducers/commentReducer";
+
 const Container = styled.div`
   // background-color: red;
   padding-bottom: 1em;
@@ -57,24 +60,28 @@ const CommentsContainer = ({ arr, listingId, user }) => {
   const [content, setContent] = useState('');
   const [comments, setComments] = useState(arr);
 
+  const dispatch = useDispatch();
+
   const postComment = (e) => {
     e.preventDefault();
 
     commentService.setToken(user.token);
 
-    const commentObj = {
-      listingId,
-      content
-    };
+    dispatch(createComment({ listingId, content }));
 
-    commentService.create(commentObj)
-      .then(returnedComment => {
-        // console.log(returnedComment);
-        setContent('');
+    // const commentObj = {
+    //   listingId,
+    //   content
+    // };
 
-        const newCommentsArr = [...comments, returnedComment];
-        setComments(newCommentsArr);
-      });
+    // commentService.create(commentObj)
+    //   .then(returnedComment => {
+    //     // console.log(returnedComment);
+    //     setContent('');
+
+    //     const newCommentsArr = [...comments, returnedComment];
+    //     setComments(newCommentsArr);
+    //   });
   };
 
   const updateCommentsArr = (deletedId) => {

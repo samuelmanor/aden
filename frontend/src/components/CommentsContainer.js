@@ -60,28 +60,28 @@ const CommentsContainer = ({ arr, listingId, user }) => {
   const [content, setContent] = useState('');
   const [comments, setComments] = useState(arr);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const postComment = (e) => {
     e.preventDefault();
 
     commentService.setToken(user.token);
 
-    dispatch(createComment({ listingId, content }));
+    // dispatch(createComment({ listingId, content }));
 
-    // const commentObj = {
-    //   listingId,
-    //   content
-    // };
+    const commentObj = {
+      listingId,
+      content
+    };
 
-    // commentService.create(commentObj)
-    //   .then(returnedComment => {
-    //     // console.log(returnedComment);
-    //     setContent('');
+    commentService.create(commentObj)
+      .then(returnedComment => {
+        // console.log(returnedComment);
+        setContent('');
 
-    //     const newCommentsArr = [...comments, returnedComment];
-    //     setComments(newCommentsArr);
-    //   });
+        const newCommentsArr = [...comments, returnedComment];
+        setComments(newCommentsArr);
+      });
   };
 
   const updateCommentsArr = (deletedId) => {

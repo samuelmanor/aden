@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getListings } from '../reducers/listingReducer';
 import listingService from '../services/listings';
 import Dropdown from './Dropdown';
 import styled from "styled-components";
@@ -25,6 +27,9 @@ const Filter = ({ setListings, setDisplayed, setQuery }) => {
   const [locationSel, setLocationSel] = useState('');
 
   const [activeQuery, setActiveQuery] = useState(false);
+
+  const dispatch = useDispatch();
+  // const listings = useSelector(state => state.listings);
 
   const filterRef = useRef();
 

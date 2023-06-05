@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import listingService from '../services/listings';
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { createListing } from "../reducers/listingReducer";
 
 const Message = styled.p`
   font-size: 30px;
@@ -27,6 +29,8 @@ const NewListing = ({ user }) => {
   const [notif, setNotif] = useState('you must be logged in to add a post.');
   const [showMessage, toggleShowMessage] = useState(user === null ? true : false);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     listingService
       .getFilters()
@@ -43,8 +47,9 @@ const NewListing = ({ user }) => {
   //   console.log(identity, service, location)
   // }, [identity, service, location])
 
-  const createListing = (e) => {
+  const postListing = async (e) => {
     e.preventDefault();
+
     const newObj = {
       name,
       address,
@@ -56,30 +61,28 @@ const NewListing = ({ user }) => {
       service
     };
 
-    listingService.create(newObj)
-      .then(returnedListing => {
-        // console.log(returnedListing);
-        setNotif(`created ${name}!`);
+    dispatch(createListing(newObj));
 
-        setName('');
-        setAddress('');
-        setDescription('');
-        setWebsite('');
-        setPhone('');
-        setIdentity('');
-        setService('');
-        setLocation('');
+    setNotif(`created ${name}!`);
 
-        toggleShowMessage(true);
-        setTimeout(() => {
-          toggleShowMessage(false);
-        }, 10000);
-      })
+    setName('');
+    setAddress('');
+    setDescription('');
+    setWebsite('');
+    setPhone('');
+    setIdentity('');
+    setService('');
+    setLocation('');
+
+    toggleShowMessage(true);
+    setTimeout(() => {
+      toggleShowMessage(false);
+    }, 10000);
   };
 
   const mapOptions = (options, type, set) => {
     return options.map(o => <div>
-      <Option 
+      <Option
         onClick={() => set(o)} 
         $selected={type === o ? 'white' : 'transparent'}>
       {o}
@@ -88,7 +91,7 @@ const NewListing = ({ user }) => {
   };
 
   const form = 
-    <form onSubmit={createListing}>
+    <form onSubmit={postListing}>
       <p>title/name:</p>
       <input value={name} onChange={(e) => setName(e.target.value)} />
 

@@ -60,38 +60,25 @@ const CommentsContainer = ({ arr, listingId, user }) => {
   const [content, setContent] = useState('');
   const [comments, setComments] = useState(arr);
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  const postComment = (e) => {
+  const postComment = async (e) => {
     e.preventDefault();
 
-    commentService.setToken(user.token);
+    dispatch(createComment(user.token, { listingId, content }))
+      .then(newComment => setComments([ ...comments, newComment ]));
 
-    // dispatch(createComment({ listingId, content }));
-
-    const commentObj = {
-      listingId,
-      content
-    };
-
-    commentService.create(commentObj)
-      .then(returnedComment => {
-        // console.log(returnedComment);
-        setContent('');
-
-        const newCommentsArr = [...comments, returnedComment];
-        setComments(newCommentsArr);
-      });
+    setContent('');
   };
 
   const updateCommentsArr = (deletedId) => {
     const newState = comments.filter(c => c.id !== deletedId);
     setComments(newState);
-  }
+  };
 
   const commentArr = comments.map(c => <Comment key={c.id} comment={c} user={user} listingId={listingId} updateCommentsArr={updateCommentsArr} />);
   
-  const postForm = <Form onSubmit={(e) => postComment(e)}>
+  const postForm = <Form onSubmit={postComment}>
     <p>add a comment</p>
 
     <input type='text' value={content} onChange={({ target }) => setContent(target.value)} />

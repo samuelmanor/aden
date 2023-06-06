@@ -25,10 +25,12 @@ const commentSlice = createSlice({
 
 export const { addComment, updateComment, removeComment } = commentSlice.actions;
 
-export const createComment = obj => {
+export const createComment = (token, obj) => {
   return async dispatch => {
+    commentService.setToken(token);
     const newComment = await commentService.create(obj);
     dispatch(addComment(newComment));
+    return newComment;
   }
 };
 

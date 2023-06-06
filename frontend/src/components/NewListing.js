@@ -85,7 +85,7 @@ const NewListing = ({ user }) => {
       <Option
         onClick={() => set(o)} 
         $selected={type === o ? 'white' : 'transparent'}>
-      {o}
+        {o}
       </Option>
     </div>)
   };

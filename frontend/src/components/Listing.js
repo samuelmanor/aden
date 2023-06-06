@@ -53,17 +53,29 @@ const Info = styled.p`
 `
 
 const Listing = ({ listing, toggleExpand, user }) => {
+  const currentUser = user === null ? { _doc: '' } : user;
+
   if (!listing) {
     return null
   };
+
+  const editListing = () => {
+
+  }
+
+  const deleteListing = () => {
+
+  }
 
   return (
     <div>
       <Container>
         <ButtonContainer>
-          {/* <Button>☆</Button> */}
+          {listing.user.username === currentUser._doc.username ? <Button onClick={editListing}>edit</Button> : null}
 
-          <Button onClick={toggleExpand}>╳</Button>
+          {listing.user.username === currentUser._doc.username ? <Button onClick={deleteListing}>delete</Button> : null}
+
+          <Button onClick={toggleExpand}>close</Button>
         </ButtonContainer>
 
         <Address>{listing.address}</Address>

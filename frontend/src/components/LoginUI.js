@@ -50,8 +50,6 @@ const LoginUI = ({ user, setUser, setDisplayed }) => {
 
       window.localStorage.setItem('loggedAdenUser', JSON.stringify(user));
 
-      listingService.setToken(user.token);
-
       setUser(user);
       setUsername('');
       setPassword('');

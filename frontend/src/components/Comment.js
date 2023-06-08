@@ -82,7 +82,7 @@ const Comment = ({ comment, user, listingId, updateCommentsArr }) => {
   const updateComment = async (e) => {
     e.preventDefault();
     
-    dispatch(editComment(user.token, comment.id, content));
+    dispatch(editComment(currentUser.token, comment.id, content));
 
     setEditingState(false);
   };
@@ -90,7 +90,7 @@ const Comment = ({ comment, user, listingId, updateCommentsArr }) => {
   const removeComment = async () => {
     updateCommentsArr(comment.id);
 
-    dispatch(deleteComment(user.token, comment.id, listingId));
+    dispatch(deleteComment(currentUser.token, comment.id, listingId));
   };
 
   const staticComment = <CommentStatic>

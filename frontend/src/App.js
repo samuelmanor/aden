@@ -29,14 +29,15 @@ const App = () => {
     console.log(`
       things to do:
         - add redux
-          - profile crud
           - user crud
-        - add profile page/functionality
+        - getfilters -> redux?
         - react component tests
-        - returned listing styling
+        - styling
+          - new listing
+          - returned listings
+          - profile
         - add cypress
         - add react router?
-        - new listing styling
     `)
   }, []);
 

@@ -72,7 +72,7 @@ const Listing = ({ listing, toggleExpand, user, setDisplayed }) => {
   };
 
   const removeListing = async () => {
-    dispatch(deleteListing(user.token, listing.id));
+    dispatch(deleteListing(currentUser.token, listing.id));
     
     setShowNotif(true);
 

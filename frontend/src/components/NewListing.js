@@ -15,7 +15,7 @@ const Option = styled.div`
   cursor: pointer;
 `
 
-const NewListing = ({ user }) => {
+const NewListing = ({ user, setDisplayed }) => {
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
@@ -43,10 +43,6 @@ const NewListing = ({ user }) => {
       });
   });
 
-  // useEffect(() => {
-  //   console.log(identity, service, location)
-  // }, [identity, service, location])
-
   const postListing = async (e) => {
     e.preventDefault();
 
@@ -61,22 +57,14 @@ const NewListing = ({ user }) => {
       service
     };
 
-    dispatch(createListing(newObj));
+    dispatch(createListing(user.token, newObj));
 
     setNotif(`created ${name}!`);
-
-    setName('');
-    setAddress('');
-    setDescription('');
-    setWebsite('');
-    setPhone('');
-    setIdentity('');
-    setService('');
-    setLocation('');
 
     toggleShowMessage(true);
     setTimeout(() => {
       toggleShowMessage(false);
+      setDisplayed('filter');
     }, 10000);
   };
 

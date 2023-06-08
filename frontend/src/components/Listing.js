@@ -17,9 +17,14 @@ const ButtonContainer = styled.div`
 const Button = styled.button`
   background-color: transparent;
   border: none;
-  font-size: 35px;
+  font-size: 25px;
   cursor: pointer;
-  margin: 10px;
+  margin: 0.2em;
+  padding: 0.3em;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 `
 
 const User = styled.p`
@@ -59,11 +64,7 @@ const Listing = ({ listing, toggleExpand, user }) => {
     return null
   };
 
-  const editListing = () => {
-
-  }
-
-  const deleteListing = () => {
+  const deleteListing = async () => {
 
   }
 
@@ -71,8 +72,6 @@ const Listing = ({ listing, toggleExpand, user }) => {
     <div>
       <Container>
         <ButtonContainer>
-          {listing.user.username === currentUser._doc.username ? <Button onClick={editListing}>edit</Button> : null}
-
           {listing.user.username === currentUser._doc.username ? <Button onClick={deleteListing}>delete</Button> : null}
 
           <Button onClick={toggleExpand}>close</Button>
@@ -91,7 +90,6 @@ const Listing = ({ listing, toggleExpand, user }) => {
       </Container>
 
       <User>posted by {listing.user.name} - @{listing.user.username}</User>
-      {/* <button onClick={() => console.log(listing)}>cl</button> */}
 
       <CommentsContainer arr={listing.comments} listingId={listing.id} user={user} />
     </div>

@@ -42,7 +42,6 @@ export const deleteComment = (token, id, listingId) => {
     commentService.setToken(token);
 
     await commentService.remove(id, listingId);
-    // dispatch(removeComment(id));
   }
 }
 

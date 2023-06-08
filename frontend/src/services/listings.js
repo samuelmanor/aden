@@ -7,11 +7,6 @@ const setToken = newToken => {
   token = `Bearer ${newToken}`;
 };
 
-// const getAll = () => {
-//   const req = axios.get(baseUrl);
-//   return req.then(res => res.data);
-// };
-
 const search = async (filters) => {
   const req = await axios.post(`${baseUrl}/search`, filters);
   return req.data; // return req.then(res => res.data);
@@ -29,7 +24,7 @@ const create = async (newObj) => {
 
   const res = await axios.post(baseUrl, newObj, config);
   return res.data;
-}
+};
 
 const exportObj = { search, getFilters, create, setToken };
 

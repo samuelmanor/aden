@@ -30,7 +30,6 @@ const App = () => {
       things to do:
         - add redux
           - profile crud
-          - finish comment crud
           - user crud
           - finish listing crud
         - add profile page/functionality
@@ -38,6 +37,7 @@ const App = () => {
         - returned listing styling
         - add cypress
         - add react router?
+        - new listing styling
     `)
   }, []);
 
@@ -49,7 +49,7 @@ const App = () => {
     } else if (displayed === 'listings') {
       return <ListingsContainer listings={listings} setDisplayed={setDisplayed} query={query} user={user} />
     } else if (displayed === 'new') {
-      return <NewListing user={user} />
+      return <NewListing user={user} setDisplayed={setDisplayed} />
     }
   };
 

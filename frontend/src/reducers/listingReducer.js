@@ -16,27 +16,17 @@ const listingSlice = createSlice({
 
 export const { setListings, appendListing } = listingSlice.actions;
 
-
-// listingService
-// .search({
-//   identity: identitySel,
-//   service: serviceSel,
-//   location: locationSel
-// })
-// .then(returnedListings => {
-//   setListings(returnedListings);
-//   setDisplayed('listings');
-//   setQuery([ identitySel, serviceSel, locationSel ]);
-// });
-export const getListings = filters => { // filters = { identity, service, location }
+export const getListings = filters => {
   return async dispatch => {
     const listings = await listingService.search(filters);
     dispatch(setListings(listings));
   };
 };
 
-export const createListing = obj => {
+export const createListing = (token, obj) => {
   return async dispatch => {
+    listingService.setToken(token);
+
     const newListing = await listingService.create(obj);
     dispatch(appendListing(newListing));
   };

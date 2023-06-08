@@ -29,8 +29,9 @@ const App = () => {
     console.log(`
       things to do:
         - add redux
-          - user crud
-        - getfilters -> redux?
+          - user crud -> NOW
+        - getfilters to redux? -> NEXT
+        - get rid of obsolete import statements
         - react component tests
         - styling
           - new listing

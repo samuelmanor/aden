@@ -7,15 +7,20 @@ const setToken = newToken => {
   token = `Bearer ${newToken}`;
 };
 
-const update = async (id, newObj) => {
+const create = async (obj) => {
+  const req = axios.create(baseUrl, obj);
+  console.log(req.data);
+};
+
+const update = async (id, obj) => {
   const config = {
     headers: { Authorization: token }
   };
 
-  const req = await axios.put(`${baseUrl}/${id}`, newObj, config);
+  const req = await axios.put(`${baseUrl}/${id}`, obj, config);
   return req.data;
 };
 
-const exportObj = { update, setToken };
+const exportObj = { create, update, setToken };
 
 export default exportObj;

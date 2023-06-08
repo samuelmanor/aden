@@ -10,35 +10,40 @@ const commentSlice = createSlice({
     },
     updateComment(state, action) {
       const id = action.payload.id;
-      // const toEdit = state.find(c => c.id === id);
-
-      // const editedComment = { ...toEdit, content: action.payload.content };
-
-      // return state.map(c => c.id !== id ? c : editedComment);
       return state.map(c => c.id !== id ? c : action.payload);
-    },
-    removeComment(state, action) {
-      console.log(state, action);
     }
   }
 });
 
-export const { addComment, updateComment, removeComment } = commentSlice.actions;
+export const { addComment, updateComment } = commentSlice.actions;
 
 export const createComment = (token, obj) => {
   return async dispatch => {
     commentService.setToken(token);
+
     const newComment = await commentService.create(obj);
     dispatch(addComment(newComment));
+
     return newComment;
   }
 };
 
-export const editComment = (id, content) => {
+export const editComment = (token, id, content) => {
   return async dispatch => {
-    const updatedComment = await commentService.update({ id, content });
+    commentService.setToken(token);
+
+    const updatedComment = await commentService.update(id, { content });
     dispatch(updateComment(updatedComment));
   }
 };
+
+export const deleteComment = (token, id, listingId) => {
+  return async dispatch => {
+    commentService.setToken(token);
+
+    await commentService.remove(id, listingId);
+    // dispatch(removeComment(id));
+  }
+}
 
 export default commentSlice.reducer;

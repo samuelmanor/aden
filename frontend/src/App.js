@@ -29,8 +29,11 @@ const App = () => {
     console.log(`
       things to do:
         - add redux
+          - profile crud
+          - finish comment crud
+          - user crud
+          - finish listing crud
         - add profile page/functionality
-        - user crud
         - react component tests
         - returned listing styling
         - add cypress

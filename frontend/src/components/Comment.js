@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import commentService from '../services/comments';
+
+import { useDispatch } from 'react-redux';
+import { editComment, deleteComment } from "../reducers/commentReducer";
 
 const CommentStatic = styled.div`
   color: black;
@@ -44,28 +46,28 @@ const EditForm = styled.form`
   margin: 0 auto;
   padding-top: 1em;
   font-size: 20px;
+`
 
-  input {
-    border: 1px solid black;
-    background-color: transparent;
-    font-family: 'Epilogue', sans-serif;
-    margin-left: 1em;
-    margin-bottom: 0.5em;
-    padding: 0.5em;
-    width: 80%;
-  }
+const Input = styled.input`
+  border: 1px solid black;
+  background-color: transparent;
+  font-family: 'Epilogue', sans-serif;
+  margin-left: 1em;
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+  width: 80%;
+`
 
-  button {
-    border: none;
-    background-color: transparent;
-    font-size: 16px;
-    padding: 0.5em;
-    cursor: pointer;
-    margin-left: 0.5em;
+const EditButton = styled.button`
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  padding: 0.5em;
+  cursor: pointer;
+  margin-left: 0.5em;
 
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
   }
 `
 
@@ -75,23 +77,20 @@ const Comment = ({ comment, user, listingId, updateCommentsArr }) => {
 
   const currentUser = user === null ? { _doc: '' } : user;
 
-  const editComment = (e) => {
-    e.preventDefault();
-    commentService.setToken(user.token);
+  const dispatch = useDispatch();
 
-    commentService.update(comment.id, {content})
-      .then(() => {
-        setEditingState(false);
-      });
+  const updateComment = async (e) => {
+    e.preventDefault();
+    
+    dispatch(editComment(user.token, comment.id, content));
+
+    setEditingState(false);
   };
 
-  const deleteComment = () => {
-    commentService.setToken(user.token);
+  const removeComment = async () => {
+    updateCommentsArr(comment.id);
 
-    commentService.remove(comment.id, listingId)
-      .then(() => {
-        updateCommentsArr(comment.id);
-      });
+    dispatch(deleteComment(user.token, comment.id, listingId));
   };
 
   const staticComment = <CommentStatic>
@@ -102,16 +101,16 @@ const Comment = ({ comment, user, listingId, updateCommentsArr }) => {
     <ButtonContainer>
       {comment.user.username === currentUser._doc.username ? <Button onClick={() => setEditingState(true)}>edit</Button> : null}
 
-      {comment.user.username === currentUser._doc.username ? <Button onClick={deleteComment}>delete</Button> : null}
+      {comment.user.username === currentUser._doc.username ? <Button onClick={removeComment}>delete</Button> : null}
     </ButtonContainer>
   </CommentStatic>
 
-  const editForm = <EditForm onSubmit={(e) => editComment(e)}>
+  const editForm = <EditForm onSubmit={updateComment}>
     <p>edit comment</p>
 
-    <input type='text' value={content} onChange={({ target }) => setContent(target.value)} />
+    <Input type='text' value={content} onChange={({ target }) => setContent(target.value)} />
 
-    <button type='submit'>submit</button>
+    <EditButton type='submit'>submit</EditButton>
   </EditForm>
 
   return (

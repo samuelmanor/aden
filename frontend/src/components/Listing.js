@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import CommentsContainer from "./CommentsContainer";
+import { useDispatch } from "react-redux";
+import { deleteListing } from "../reducers/listingReducer";
+import { useState } from "react";
 
 const Container = styled.div`
   background-color: rgb(247, 247, 242);
@@ -57,41 +60,57 @@ const Info = styled.p`
   font-size: 25px;
 `
 
-const Listing = ({ listing, toggleExpand, user }) => {
+const Listing = ({ listing, toggleExpand, user, setDisplayed }) => {
+  const [showNotif, setShowNotif] = useState(false);
+
   const currentUser = user === null ? { _doc: '' } : user;
+
+  const dispatch = useDispatch();
 
   if (!listing) {
     return null
   };
 
-  const deleteListing = async () => {
+  const removeListing = async () => {
+    dispatch(deleteListing(user.token, listing.id));
+    
+    setShowNotif(true);
 
-  }
+    setTimeout(() => {
+      setDisplayed('filter');
+    }, 8000);
+  };
+
+  const notif = <p>listing deleted!</p>;
+
+  const listingStatic = <div>
+    <Container>
+      <ButtonContainer>
+        {listing.user.username === currentUser._doc.username ? <Button onClick={removeListing}>delete</Button> : null}
+
+        <Button onClick={toggleExpand}>close</Button>
+      </ButtonContainer>
+
+      <Address>{listing.address}</Address>
+
+      <Description>{listing.description}</Description>
+
+      <InfoContainer>
+        <Info>{listing.phone}</Info>
+
+        <Info><a href={`https://${listing.website}`}>{listing.website}</a></Info>
+      </InfoContainer>
+
+    </Container>
+
+    <User>posted by {listing.user.name} - @{listing.user.username}</User>
+
+    <CommentsContainer arr={listing.comments} listingId={listing.id} user={user} />
+  </div>
 
   return (
     <div>
-      <Container>
-        <ButtonContainer>
-          {listing.user.username === currentUser._doc.username ? <Button onClick={deleteListing}>delete</Button> : null}
-
-          <Button onClick={toggleExpand}>close</Button>
-        </ButtonContainer>
-
-        <Address>{listing.address}</Address>
-
-        <Description>{listing.description}</Description>
-
-        <InfoContainer>
-          <Info>{listing.phone}</Info>
-
-          <Info><a href={`https://${listing.website}`}>{listing.website}</a></Info>
-        </InfoContainer>
-
-      </Container>
-
-      <User>posted by {listing.user.name} - @{listing.user.username}</User>
-
-      <CommentsContainer arr={listing.comments} listingId={listing.id} user={user} />
+      {showNotif ? notif : listingStatic}
     </div>
   )
 }

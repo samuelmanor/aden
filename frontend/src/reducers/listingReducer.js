@@ -32,4 +32,12 @@ export const createListing = (token, obj) => {
   };
 };
 
+export const deleteListing = (token, id) => {
+  return async dispatch => {
+    listingService.setToken(token);
+
+    await listingService.remove(id);
+  }
+}
+
 export default listingSlice.reducer;

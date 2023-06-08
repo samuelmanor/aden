@@ -26,6 +26,15 @@ const create = async (newObj) => {
   return res.data;
 };
 
-const exportObj = { search, getFilters, create, setToken };
+const remove = async (id) => {
+  const config = {
+    headers: { Authorization: token }
+  };
+
+  const res = await axios.delete(`${baseUrl}/${id}`, config);
+  console.log(res.data);
+};
+
+const exportObj = { search, getFilters, create, remove, setToken };
 
 export default exportObj;

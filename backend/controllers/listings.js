@@ -72,27 +72,6 @@ listingsRouter.post('/', async (req, res) => {
 	res.status(201).json(savedListing);
 });
 
-listingsRouter.put('/:id', async (req, res, next) => {
-	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
-
-	if (!decodedToken.id) {
-		return res.status(401).json({ error: 'token invalid' });
-	}
-
-	const listing = await Listing.findById(req.params.id);
-	const user = await User.findById(decodedToken.id);
-
-	if (listing.user.toString() !== user.id) {
-		return res.status(401).json({ error: 'unauthorized user' });
-	}
-
-	Listing.findByIdAndUpdate(req.params.id, req.body, { new: true })
-		.then(updatedListing => {
-			res.json(updatedListing);
-		})
-		.catch(error => next(error));
-});
-
 listingsRouter.delete('/:id', async (req, res) => {
 	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
 

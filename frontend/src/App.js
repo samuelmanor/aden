@@ -31,7 +31,6 @@ const App = () => {
         - add redux
           - profile crud
           - user crud
-          - finish listing crud
         - add profile page/functionality
         - react component tests
         - returned listing styling

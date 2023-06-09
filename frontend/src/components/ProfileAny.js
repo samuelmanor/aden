@@ -16,6 +16,11 @@ const ProfileAny = ({ user, id }) => {
     dispatch(selectUser(id));
   }, []);
 
+  useEffect(() => {
+    setName(selectedUser.name);
+    setBio(selectedUser.bio);
+  }, [selectedUser]);
+
   const updateUser = async (e) => {
     e.preventDefault();
 

@@ -3,10 +3,24 @@ import listingService from '../services/listings';
 
 const listingSlice = createSlice({
   name: 'listings',
-  initialState: [],
+  initialState: {
+    filters: {},
+    query: [],
+    listings: []
+  },
   reducers: {
     setListings(state, action) {
-      return action.payload
+      return {
+        ...state,
+        query: action.payload.filters,
+        listings: action.payload.listings
+      };
+    },
+    setFilters(state, action) {
+      return {
+        ...state,
+        filters: action.payload
+      }
     },
     appendListing(state,action) {
       state.push(action.payload);
@@ -17,12 +31,20 @@ const listingSlice = createSlice({
   }
 });
 
-export const { setListings, appendListing } = listingSlice.actions;
+export const { setListings, setFilters, appendListing, removeListing } = listingSlice.actions;
+
+export const getFilters = () => {
+  return async dispatch => {
+    const filters = await listingService.getFilters();
+    dispatch(setFilters(filters));
+    return filters;
+  };
+};
 
 export const getListings = filters => {
   return async dispatch => {
     const listings = await listingService.search(filters);
-    dispatch(setListings(listings));
+    dispatch(setListings({ filters, listings }));
   };
 };
 

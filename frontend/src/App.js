@@ -12,8 +12,6 @@ import ProfileAny from './components/ProfileAny';
 
 const App = () => {
   const [displayed, setDisplayed] = useState('filter');
-  const [listings, setListings] = useState([]);
-  const [query, setQuery] = useState([]);
   const [user, setUser] = useState(null);
   const [profileId, setProfileId] = useState('');
 
@@ -29,9 +27,9 @@ const App = () => {
     console.log(`
       things to do:
         - add redux
-          - user crud -> NOW
-          - fix state initialization??
-        - getfilters to redux? -> NEXT
+          - user create/delete
+          - fix state initialization?? -> now, listings and comments
+        - getfilters to redux?
         - get rid of obsolete import statements
         - react component tests
         - styling
@@ -50,11 +48,11 @@ const App = () => {
 
   const toggleMain = () => {
     if (displayed === 'filter') {
-      return <Filter setListings={setListings} setDisplayed={setDisplayed} setQuery={setQuery} />
+      return <Filter setDisplayed={setDisplayed} />
     } else if (displayed === 'profile') {
       return <ProfileAny user={user} id={profileId} />
     } else if (displayed === 'listings') {
-      return <ListingsContainer listings={listings} setDisplayed={setDisplayed} query={query} user={user} getProfile={getProfile} />
+      return <ListingsContainer setDisplayed={setDisplayed} user={user} getProfile={getProfile} />
     } else if (displayed === 'new') {
       return <NewListing user={user} setDisplayed={setDisplayed} />
     }

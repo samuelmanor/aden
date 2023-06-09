@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Listing from "./Listing";
 import SearchHeader from "./SearchHeader";
 import { useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   background-color: rgb(247, 247, 242);
@@ -64,14 +65,12 @@ const ReturnButton = styled.button`
   cursor: pointer;
 `
 
-const ListingsContainer = ({ listings, setDisplayed, query, user, getProfile }) => {
+const ListingsContainer = ({ setDisplayed, user, getProfile }) => {
   const [selected, setSelected] = useState(null);
 
   const containerRef = useRef();
 
-  if (!listings) {
-    return null;
-  }
+  const listings = useSelector(state => state.listings.listings);
 
   const expandListing = (listing) => {
     setSelected(listing);
@@ -83,7 +82,7 @@ const ListingsContainer = ({ listings, setDisplayed, query, user, getProfile }) 
   const apology = 
     <NoResults>
       sorry, nothing found!
-      {user !== null ? 'please make a post if you have something to add!' : ''}
+      {user !== null ? ' please make a post if you have something to add!' : ''}
       <ReturnButton onClick={() => setDisplayed('filter')}>back to search</ReturnButton>
     </NoResults>
 
@@ -100,7 +99,8 @@ const ListingsContainer = ({ listings, setDisplayed, query, user, getProfile }) 
 
   return (
     <div>
-      <SearchHeader selected={selected} query={selected ? [] : query} />
+      {/* <button onClick={() => console.log(listings, queryState)}>cl</button> */}
+      <SearchHeader selected={selected} />
 
       <Listing listing={selected} toggleExpand={() => setSelected(null)} user={user} setDisplayed={setDisplayed} getProfile={getProfile} />
 

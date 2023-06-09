@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getListings } from '../reducers/listingReducer';
+import { useDispatch } from 'react-redux';
+import { getFilters, getListings } from '../reducers/listingReducer';
 import listingService from '../services/listings';
 import Dropdown from './Dropdown';
 import styled from "styled-components";
@@ -19,66 +19,45 @@ const Button = styled.button`
   }
 `
 
-const Filter = ({ setListings, setDisplayed, setQuery }) => {
+const Filter = ({ setDisplayed }) => {
   const [filterOptions, setFilterOptions] = useState({});
 
-  const [identitySel, setIdentitySel] = useState('');
-  const [serviceSel, setServiceSel] = useState('');
-  const [locationSel, setLocationSel] = useState('');
+  const dispatch = useDispatch();
+
+  const [identity, setIdentity] = useState('');
+  const [service, setService] = useState('');
+  const [location, setLocation] = useState('');
 
   const [activeQuery, setActiveQuery] = useState(false);
-
-  const dispatch = useDispatch();
-  // const listings = useSelector(state => state.listings);
 
   const filterRef = useRef();
 
   useEffect(() => {
-    listingService
-      .getFilters()
-      .then(returnedFilters => {
-        setFilterOptions({
-          // identities: returnedFilters.identities,
-          identities: ["transmasc", "transfem"],
-          services: returnedFilters.services,
-          locations: returnedFilters.locations
-        });
-      });
+    dispatch(getFilters())
+      .then(f => setFilterOptions(f));
   }, []);
 
-  const getListings = () => {
-    listingService
-      .search({
-        identity: identitySel,
-        service: serviceSel,
-        location: locationSel
-      })
-      .then(returnedListings => {
-        setListings(returnedListings);
-        setDisplayed('listings');
-        setQuery([ identitySel, serviceSel, locationSel ]);
-      });
+  const search = async () => {
+    dispatch(getListings({ identity, service, location }));
+
+    setDisplayed('listings');
   };
 
-  // useEffect(() => {
-  //   console.log('identity:', identitySel, 'service:', serviceSel, 'location:', locationSel, activeQuery); // dev
-  // }, [ identitySel, serviceSel, locationSel, activeQuery ]);
-
   useEffect(() => {
-    identitySel && serviceSel && locationSel ? setActiveQuery(true) : setActiveQuery(false);
-  }, [identitySel, serviceSel, locationSel]);
+    identity && service && location ? setActiveQuery(true) : setActiveQuery(false);
+  }, [identity, service, location]);
 
   return (
     <div>
       <div id='filter' ref={filterRef}>
 
-        <Dropdown placeholder='...' label={'i am'} arr={filterOptions.identities} select={setIdentitySel} filter={filterRef} />
+        <Dropdown placeholder='...' label={'i am'} arr={['transmasc', 'transfem']} select={setIdentity} filter={filterRef} />
 
-        <Dropdown placeholder='...' label={'seeking'} arr={filterOptions.services} select={setServiceSel} filter={filterRef} />
+        <Dropdown placeholder='...' label={'seeking'} arr={filterOptions.services} select={setService} filter={filterRef} />
 
-        <Dropdown placeholder='...' label={'near'} arr={filterOptions.locations} select={setLocationSel} filter={filterRef} />
+        <Dropdown placeholder='...' label={'near'} arr={filterOptions.locations} select={setLocation} filter={filterRef} />
 
-        { activeQuery ? <Button onClick={getListings}>search</Button> : null }
+        { activeQuery ? <Button onClick={search}>search</Button> : null }
       </div>
     </div>
   )

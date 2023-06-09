@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -44,11 +44,17 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
   const [selectedText, setSelectedText] = useState(null);
   const [labelWidth, setLabelWidth] = useState(0);
 
+  const [dropdownWidth, setDropdownWidth] = useState(0);
+
   const labelRef = useCallback(node => {
     if (node !== null) {
       setLabelWidth(node.getBoundingClientRect().width);
     }
   }, [])
+
+  useEffect(() => {
+    setDropdownWidth(filter.current.offsetWidth - labelWidth - 280);
+  }, [labelWidth])
 
   if (!arr) {
     return null;
@@ -58,10 +64,6 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
     select(option);
     setSelectedText(option);
     setShow(false);
-  };
-
-  const currentWidth = () => {
-    return filter.current.offsetWidth - labelWidth - 280;
   };
 
   const options = arr.map(o => 
@@ -74,9 +76,9 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
     <Container>
       <Label ref={labelRef} id={label} >{label}</Label>
 
-      <Current style={{ width: currentWidth() }} onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</Current>
+      <Current style={{ width: dropdownWidth}} onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</Current>
 
-      <Options style={{ width: currentWidth() + 10, display: show ? '' : 'none' }}>
+      <Options style={{ width: dropdownWidth + 10, display: show ? '' : 'none' }}>
         {options}
       </Options>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editUser, initializeUser } from "../reducers/userReducer";
+import { editUser, selectUser } from "../reducers/userReducer";
 
 const ProfileAny = ({ user, id }) => {
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ const ProfileAny = ({ user, id }) => {
   const [editingState, toggleEditingState] = useState(false);
   
   useEffect(() => {
-    dispatch(initializeUser(id));
+    dispatch(selectUser(id));
   }, []);
 
   const updateUser = async (e) => {

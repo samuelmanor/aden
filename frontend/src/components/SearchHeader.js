@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const QueryTitle = styled.p`
@@ -24,13 +25,15 @@ const Bold = styled.p`
   display: inline;
 `
 
-const SearchHeader = ({ selected, query }) => {
+const SearchHeader = ({ selected }) => {
+  const queryState = useSelector(state => state.listings.query);
+
   const results = 
     <div>
       <QueryTitle>results for</QueryTitle>
 
       <Query>
-          <Bold>{query[0]} {query[1]}</Bold> near <Bold>{query[2]}</Bold>
+          <Bold>{queryState.identity} {queryState.service}</Bold> near <Bold>{queryState.location}</Bold>
       </Query>
     </div>
 
@@ -41,7 +44,7 @@ const SearchHeader = ({ selected, query }) => {
     
   return (
     <div>
-      {query.length === 0 ? listingName : results}
+      {queryState.length === 0 ? listingName : results}
     </div>
   )
 }

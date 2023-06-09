@@ -21,7 +21,7 @@ const userSlice = createSlice({
       }
     },
     addUser(state, action) {
-      state.push(action.payload);
+      // state.push(action.payload);
     }
   }
 });
@@ -32,7 +32,7 @@ export const login = () => {
   // for logging in
 }
 
-export const initializeUser = (id) => {
+export const selectUser = (id) => {
   return async dispatch => {
     const user = await userService.read(id);
     dispatch(setSelectedUser(user));

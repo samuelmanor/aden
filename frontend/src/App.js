@@ -28,8 +28,7 @@ const App = () => {
       things to do:
         - add redux
           - user create/delete
-          - fix state initialization?? -> now, listings and comments
-        - getfilters to redux?
+          - fix state initialization?? -> now, set comments state from listings once listing is selected
         - get rid of obsolete import statements
         - react component tests
         - styling

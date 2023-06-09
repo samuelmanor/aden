@@ -35,7 +35,7 @@ const Filter = ({ setDisplayed }) => {
   useEffect(() => {
     dispatch(getFilters())
       .then(f => setFilterOptions(f));
-  }, []);
+  }, [dispatch]);
 
   const search = async () => {
     dispatch(getListings({ identity, service, location }));

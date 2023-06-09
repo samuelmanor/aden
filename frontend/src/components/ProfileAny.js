@@ -14,7 +14,7 @@ const ProfileAny = ({ user, id }) => {
   
   useEffect(() => {
     dispatch(selectUser(id));
-  }, []);
+  }, [dispatch, id]);
 
   useEffect(() => {
     setName(selectedUser.name);

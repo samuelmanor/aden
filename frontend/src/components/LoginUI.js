@@ -38,7 +38,7 @@ const Button = styled.button`
   cursor: pointer;
 `
 
-const LoginUI = ({ user, setUser, setDisplayed }) => {
+const LoginUI = ({ user, setUser, setDisplayed, getProfile }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -78,7 +78,7 @@ const LoginUI = ({ user, setUser, setDisplayed }) => {
 
   const profileForm = (
     <div>
-      <p onClick={() => setDisplayed('profile')}>profile</p>
+      <p onClick={() => getProfile(user._doc._id)}>profile</p>
       <p onClick={handleLogout}>log out</p>
     </div>
   );

@@ -11,6 +11,9 @@ const commentSlice = createSlice({
     updateComment(state, action) {
       const id = action.payload.id;
       return state.map(c => c.id !== id ? c : action.payload);
+    },
+    removeComment(state, action) {
+      // return state.map(c => )
     }
   }
 });

@@ -60,7 +60,7 @@ const Info = styled.p`
   font-size: 25px;
 `
 
-const Listing = ({ listing, toggleExpand, user, setDisplayed }) => {
+const Listing = ({ listing, toggleExpand, user, setDisplayed, getProfile }) => {
   const [showNotif, setShowNotif] = useState(false);
 
   const currentUser = user === null ? { _doc: '' } : user;
@@ -103,7 +103,7 @@ const Listing = ({ listing, toggleExpand, user, setDisplayed }) => {
 
     </Container>
 
-    <User>posted by {listing.user.name} - @{listing.user.username}</User>
+    <User onClick={() => getProfile(listing.user.id)}>posted by {listing.user.name} - @{listing.user.username}</User>
 
     <CommentsContainer arr={listing.comments} listingId={listing.id} user={user} />
   </div>

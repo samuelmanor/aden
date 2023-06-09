@@ -10,6 +10,9 @@ const listingSlice = createSlice({
     },
     appendListing(state,action) {
       state.push(action.payload);
+    },
+    removeListing(state, action) {
+      // return state.map(l =>)
     }
   }
 });

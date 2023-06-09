@@ -64,7 +64,7 @@ const ReturnButton = styled.button`
   cursor: pointer;
 `
 
-const ListingsContainer = ({ listings, setDisplayed, query, user }) => {
+const ListingsContainer = ({ listings, setDisplayed, query, user, getProfile }) => {
   const [selected, setSelected] = useState(null);
 
   const containerRef = useRef();
@@ -102,7 +102,7 @@ const ListingsContainer = ({ listings, setDisplayed, query, user }) => {
     <div>
       <SearchHeader selected={selected} query={selected ? [] : query} />
 
-      <Listing listing={selected} toggleExpand={() => setSelected(null)} user={user} setDisplayed={setDisplayed} />
+      <Listing listing={selected} toggleExpand={() => setSelected(null)} user={user} setDisplayed={setDisplayed} getProfile={getProfile} />
 
       <Container ref={containerRef} style={{ display: selected ? 'none' : '' }}>
           {listings.length === 0 ? apology : smallListings}

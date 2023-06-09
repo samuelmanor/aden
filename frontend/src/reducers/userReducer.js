@@ -3,19 +3,41 @@ import userService from '../services/users';
 
 const userSlice = createSlice({
   name: 'users',
-  initialState: [],
+  initialState: {
+    currentUser: {},
+    selectedUser: {}
+  },
   reducers: {
+    loginUser(state, action) { // <- for logging in
+      return {
+        ...state,
+        currentUser: action.payload
+      }
+    },
+    setSelectedUser(state, action) {
+      return {
+        ...state,
+        selectedUser: action.payload
+      }
+    },
     addUser(state, action) {
       state.push(action.payload);
-    },
-    updateUser(state, action) {
-      const id = action.payload.id;
-      return state.map(u => u.id !== id ? u : action.payload);
     }
   }
 });
 
-export const { addUser, updateUser } = userSlice.actions;
+export const { loginUser, setSelectedUser, addUser } = userSlice.actions;
+
+export const login = () => {
+  // for logging in
+}
+
+export const initializeUser = (id) => {
+  return async dispatch => {
+    const user = await userService.read(id);
+    dispatch(setSelectedUser(user));
+  }
+};
 
 export const createUser = obj => {
   return async dispatch => {
@@ -29,7 +51,7 @@ export const editUser = (token, id, obj) => {
     userService.setToken(token);
 
     const updatedUser = await userService.update(id, obj);
-    dispatch(updateUser(updatedUser));
+    dispatch(setSelectedUser(updatedUser));
   }
 };
 

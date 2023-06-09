@@ -7,8 +7,13 @@ const setToken = newToken => {
   token = `Bearer ${newToken}`;
 };
 
+const read = async (id) => {
+  const req = await axios.get(`${baseUrl}/${id}`);
+  return req.data;
+};
+
 const create = async (obj) => {
-  const req = axios.create(baseUrl, obj);
+  const req = await axios.create(baseUrl, obj);
   console.log(req.data);
 };
 
@@ -21,6 +26,6 @@ const update = async (id, obj) => {
   return req.data;
 };
 
-const exportObj = { create, update, setToken };
+const exportObj = { read, create, update, setToken };
 
 export default exportObj;

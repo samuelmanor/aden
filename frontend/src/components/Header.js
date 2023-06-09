@@ -29,8 +29,8 @@ const Tab = styled.p`
   cursor: pointer;
 `
 
-const Header = ({ setDisplayed, user, setUser }) => {
-  const [showLoginUI, toggleShowLoginUi] = useState(false);
+const Header = ({ setDisplayed, user, setUser, getProfile }) => {
+  const [showLoginUI, toggleShowLoginUI] = useState(false);
 
   return (
     <Container>
@@ -38,11 +38,11 @@ const Header = ({ setDisplayed, user, setUser }) => {
 
       <Title onClick={() => setDisplayed('filter')}>aden</Title>
       
-      <Tab onClick={() => toggleShowLoginUi(!showLoginUI)} >
+      <Tab onClick={() => toggleShowLoginUI(!showLoginUI)} >
         {user === null ? 'log in' : user._doc.name}
       </Tab>
 
-      {showLoginUI ? <LoginUI user={user} setUser={setUser} setDisplayed={setDisplayed} /> : null}
+      {showLoginUI ? <LoginUI user={user} setUser={setUser} setDisplayed={setDisplayed} getProfile={getProfile} /> : null}
     </Container>
   )
 }

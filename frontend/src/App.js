@@ -52,7 +52,7 @@ const App = () => {
     if (displayed === 'filter') {
       return <Filter setListings={setListings} setDisplayed={setDisplayed} setQuery={setQuery} />
     } else if (displayed === 'profile') {
-      return <ProfileAny currentUser={user} id={profileId} />
+      return <ProfileAny user={user} id={profileId} />
     } else if (displayed === 'listings') {
       return <ListingsContainer listings={listings} setDisplayed={setDisplayed} query={query} user={user} getProfile={getProfile} />
     } else if (displayed === 'new') {

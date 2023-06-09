@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editUser, initializeUser } from "../reducers/userReducer";
 
-const ProfileAny = ({ currentUser, id }) => {
+const ProfileAny = ({ user, id }) => {
   const dispatch = useDispatch();
   const selectedUser = useSelector(state => state.users.selectedUser);
+
+  const currentUser = user === null ? { _doc: '' } : user;
 
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');

@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import commentService from '../services/comments';
 import Comment from "./Comment";
 
-import { useDispatch } from 'react-redux';
-import { createComment } from "../reducers/commentReducer";
+import { useDispatch, useSelector } from 'react-redux';
+import { createComment, initializeComments } from "../reducers/commentReducer";
 
 const Container = styled.div`
   // background-color: red;
@@ -61,22 +61,27 @@ const CommentsContainer = ({ arr, listingId, user }) => {
   const [comments, setComments] = useState(arr);
 
   const dispatch = useDispatch();
+  const commentsSelector = useSelector(state => state.comments);
+
+  useEffect(() => {
+    dispatch(initializeComments(arr));
+  }, [dispatch])
 
   const postComment = async (e) => {
     e.preventDefault();
 
     dispatch(createComment(user.token, { listingId, content }))
-      .then(newComment => setComments([ ...comments, newComment ]));
+      // .then(newComment => setComments([ ...comments, newComment ]));
 
     setContent('');
   };
 
   const updateCommentsArr = (deletedId) => {
-    const newState = comments.filter(c => c.id !== deletedId);
-    setComments(newState);
+    // const newState = comments.filter(c => c.id !== deletedId);
+    // setComments(newState);
   };
 
-  const commentArr = comments.map(c => <Comment key={c.id} comment={c} user={user} listingId={listingId} updateCommentsArr={updateCommentsArr} />);
+  const commentArr = commentsSelector.map(c => <Comment key={c.id} comment={c} user={user} listingId={listingId} updateCommentsArr={updateCommentsArr} />);
   
   const postForm = <Form onSubmit={postComment}>
     <p>add a comment</p>
@@ -88,8 +93,9 @@ const CommentsContainer = ({ arr, listingId, user }) => {
 
   return (
     <Container>
-      <Title>{comments.length} Comment{comments.length === 1 ? '' : 's'}</Title>
+      <Title>{commentsSelector.length} Comment{commentsSelector.length === 1 ? '' : 's'}</Title>
 
+      <button onClick={() => console.log(commentsSelector)}>cl</button>
       {commentArr}
 
       {user !== null ? postForm : <p id='comment-notif'>you must be logged in to add a comment.</p>}

@@ -43,8 +43,14 @@ export const getFilters = () => {
 
 export const getListings = filters => {
   return async dispatch => {
-    const listings = await listingService.search(filters);
-    dispatch(setListings({ filters, listings }));
+    // const listings = await listingService.search(filters);
+    // dispatch(setListings({ filters, listings }));
+    try {
+      const listings = await listingService.search(filters);
+      dispatch(setListings({ filters, listings }));
+    } catch (error) {
+      console.error(error.response.data);
+    }
   };
 };
 

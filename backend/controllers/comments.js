@@ -54,14 +54,14 @@ commentsRouter.patch('/:id', async (req, res, next) => {
 		return res.status(401).json({ error: 'unauthorized user' });
 	}
 
-	Comment.findByIdAndUpdate(req.params.id, req.body, { new: true })
-		.then(updatedComment => {
-			res.json(updatedComment);
-		})
-		.catch(error => next(error));
+	const updatedComment = Comment.findByIdAndUpdate(req.params.id, req.body, { new: true })
+
+  await updatedComment.populate('user');
+
+  res.json(updatedComment);
 });
 
-commentsRouter.delete('/:id', async (req, res, next) => { // in body: listingId
+commentsRouter.delete('/:id', async (req, res, next) => {
 	const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
 
 	if (!decodedToken.id) {

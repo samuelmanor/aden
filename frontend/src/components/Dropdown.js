@@ -53,7 +53,7 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
   }, [])
 
   useEffect(() => {
-    setDropdownWidth(filter.current.offsetWidth - labelWidth - 280); // -> use useReducer instead?
+    setDropdownWidth(filter.current.offsetWidth - labelWidth - 280);
   }, [filter, labelWidth])
 
   if (!arr) {

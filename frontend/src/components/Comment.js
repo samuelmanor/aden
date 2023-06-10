@@ -88,7 +88,7 @@ const Comment = ({ comment, user, listingId, updateCommentsArr }) => {
   };
 
   const removeComment = async () => {
-    updateCommentsArr(comment.id);
+    // updateCommentsArr(comment.id);
 
     dispatch(deleteComment(currentUser.token, comment.id, listingId));
   };

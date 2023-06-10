@@ -71,7 +71,7 @@ const EditButton = styled.button`
   }
 `
 
-const Comment = ({ comment, user, listingId, updateCommentsArr }) => {
+const Comment = ({ comment, user, listingId }) => {
   const [editingState, setEditingState] = useState(false);
   const [content, setContent] = useState(comment.content);
 
@@ -88,8 +88,6 @@ const Comment = ({ comment, user, listingId, updateCommentsArr }) => {
   };
 
   const removeComment = async () => {
-    // updateCommentsArr(comment.id);
-
     dispatch(deleteComment(currentUser.token, comment.id, listingId));
   };
 

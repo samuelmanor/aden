@@ -71,17 +71,11 @@ const CommentsContainer = ({ arr, listingId, user }) => {
     e.preventDefault();
 
     dispatch(createComment(user.token, { listingId, content }))
-      // .then(newComment => setComments([ ...comments, newComment ]));
 
     setContent('');
   };
 
-  const updateCommentsArr = (deletedId) => {
-    // const newState = comments.filter(c => c.id !== deletedId);
-    // setComments(newState);
-  };
-
-  const commentArr = commentsSelector.map(c => <Comment key={c.id} comment={c} user={user} listingId={listingId} updateCommentsArr={updateCommentsArr} />);
+  const commentArr = commentsSelector.map(c => <Comment key={c.id} comment={c} user={user} listingId={listingId} />);
   
   const postForm = <Form onSubmit={postComment}>
     <p>add a comment</p>

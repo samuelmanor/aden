@@ -99,7 +99,6 @@ const ListingsContainer = ({ setDisplayed, user, getProfile }) => {
 
   return (
     <div>
-      <button onClick={() => console.log(listings)}>cl</button>
       <SearchHeader selected={selected} />
 
       <Listing listing={selected} toggleExpand={() => setSelected(null)} user={user} setDisplayed={setDisplayed} getProfile={getProfile} />

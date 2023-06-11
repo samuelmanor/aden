@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getFilters, getListings } from '../reducers/listingReducer';
 import listingService from '../services/listings';
 import Dropdown from './Dropdown';
@@ -20,21 +20,18 @@ const Button = styled.button`
 `
 
 const Filter = ({ setDisplayed }) => {
-  const [filterOptions, setFilterOptions] = useState({});
-
   const dispatch = useDispatch();
+  const filters = useSelector(state => state.listings.filters);
 
   const [identity, setIdentity] = useState('');
   const [service, setService] = useState('');
   const [location, setLocation] = useState('');
-
   const [activeQuery, setActiveQuery] = useState(false);
 
   const filterRef = useRef();
 
   useEffect(() => {
-    dispatch(getFilters())
-      .then(f => setFilterOptions(f));
+    dispatch(getFilters());
   }, [dispatch]);
 
   const search = async () => {
@@ -53,9 +50,9 @@ const Filter = ({ setDisplayed }) => {
 
         <Dropdown placeholder='...' label={'i am'} arr={['transmasc', 'transfem']} select={setIdentity} filter={filterRef} />
 
-        <Dropdown placeholder='...' label={'seeking'} arr={filterOptions.services} select={setService} filter={filterRef} />
+        <Dropdown placeholder='...' label={'seeking'} arr={filters.services} select={setService} filter={filterRef} />
 
-        <Dropdown placeholder='...' label={'near'} arr={filterOptions.locations} select={setLocation} filter={filterRef} />
+        <Dropdown placeholder='...' label={'near'} arr={filters.locations} select={setLocation} filter={filterRef} />
 
         { activeQuery ? <Button onClick={search}>search</Button> : null }
       </div>

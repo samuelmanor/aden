@@ -23,7 +23,6 @@ const listingSlice = createSlice({
       }
     },
     appendListing(state,action) {
-      // state.push(action.payload);
       const updatedListings = [ ...state.listings, action.payload ];
       return {
         ...state,
@@ -46,18 +45,13 @@ export const getFilters = () => {
   return async dispatch => {
     const filters = await listingService.getFilters();
     dispatch(setFilters(filters));
-    return filters; // del
   };
 };
 
 export const getListings = filters => {
   return async dispatch => {
-    try {
-      const listings = await listingService.search(filters);
-      dispatch(setListings({ filters, listings }));
-    } catch (error) {
-      console.error(error.response.data);
-    }
+    const listings = await listingService.search(filters);
+    dispatch(setListings({ filters, listings }));
   };
 };
 

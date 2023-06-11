@@ -43,7 +43,6 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
   const [show, setShow] = useState(false);
   const [selectedText, setSelectedText] = useState(null);
   const [labelWidth, setLabelWidth] = useState(0);
-
   const [dropdownWidth, setDropdownWidth] = useState(0);
 
   const labelRef = useCallback(node => {

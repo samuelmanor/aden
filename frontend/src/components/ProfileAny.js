@@ -28,12 +28,11 @@ const ProfileAny = ({ id }) => {
     toggleEditingState(false);
   };
 
-  const profileStatic = <div>
-    <button onClick={() => console.log(currentUser, selectedUser)}>cl</button>
+  const profile = <div>
     {currentUser._doc._id === selectedUser.id ? <button onClick={() => toggleEditingState(true)}>edit</button> : null}
 
     <p>{selectedUser.name}</p>
-    <p>{selectedUser.username}</p>
+    <p>@{selectedUser.username}</p>
     <p>{selectedUser.bio}</p>
   </div>
 
@@ -51,8 +50,7 @@ const ProfileAny = ({ id }) => {
 
   return (
     <div>
-      <button onClick={() => console.log(selectedUser)}>cl</button>
-      {editingState ? editForm : profileStatic}
+      {editingState ? editForm : profile}
     </div>
   )
 };

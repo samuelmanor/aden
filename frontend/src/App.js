@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { getCurrent } from './reducers/userReducer';
 
 import Filter from "./components/Filter";
 import MainContainer from "./components/MainContainer";
 import ListingsContainer from './components/ListingsContainer';
 import Header from './components/Header';
 import NewListing from './components/NewListing';
-
-import listingService from './services/listings';
-import './App.css'
 import ProfileAny from './components/ProfileAny';
-import { useDispatch } from 'react-redux';
-import { getCurrent, testMe } from './reducers/userReducer';
+
+import './App.css'
 
 const App = () => {
   const [displayed, setDisplayed] = useState('filter');
@@ -41,7 +40,7 @@ const App = () => {
 
   return (
     <div>
-      <Header setDisplayed={setDisplayed} getProfile={getProfile}  />
+      <Header setDisplayed={setDisplayed} getProfile={getProfile} />
 
       <MainContainer>
         {toggleMain()}

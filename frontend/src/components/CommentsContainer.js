@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import commentService from '../services/comments';
 import Comment from "./Comment";
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -60,8 +59,8 @@ const CommentsContainer = ({ arr, listingId }) => {
   const [content, setContent] = useState('');
 
   const dispatch = useDispatch();
-  const commentsSelector = useSelector(state => state.comments);
-  const userSelector = useSelector(state => state.users.currentUser);
+  const comments = useSelector(state => state.comments);
+  const user = useSelector(state => state.users.currentUser);
 
   useEffect(() => {
     dispatch(initializeComments(arr));
@@ -70,12 +69,12 @@ const CommentsContainer = ({ arr, listingId }) => {
   const postComment = async (e) => {
     e.preventDefault();
 
-    dispatch(createComment(userSelector.token, { listingId, content }))
+    dispatch(createComment(user.token, { listingId, content }))
 
     setContent('');
   };
 
-  const commentArr = commentsSelector.map(c => <Comment key={c.id} comment={c} listingId={listingId} />);
+  const commentArr = comments.map(c => <Comment key={c.id} comment={c} listingId={listingId} />);
   
   const postForm = <Form onSubmit={postComment}>
     <p>add a comment</p>
@@ -87,11 +86,11 @@ const CommentsContainer = ({ arr, listingId }) => {
 
   return (
     <Container>
-      <Title>{commentsSelector.length} Comment{commentsSelector.length === 1 ? '' : 's'}</Title>
+      <Title>{comments.length} Comment{comments.length === 1 ? '' : 's'}</Title>
 
       {commentArr}
 
-      {Object.keys(userSelector).length !== 0 ? postForm : <p id='comment-notif'>you must be logged in to add a comment.</p>}
+      {Object.keys(user).length !== 0 ? postForm : <p id='comment-notif'>you must be logged in to add a comment.</p>}
     </Container>
   )
 }

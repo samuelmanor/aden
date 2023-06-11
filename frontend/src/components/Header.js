@@ -33,7 +33,7 @@ const Tab = styled.p`
 const Header = ({ setDisplayed, getProfile }) => {
   const [showLoginUI, toggleShowLoginUI] = useState(false);
 
-  const userSelector = useSelector(state => state.users.currentUser);
+  const user = useSelector(state => state.users.currentUser);
 
   return (
     <Container>
@@ -42,7 +42,7 @@ const Header = ({ setDisplayed, getProfile }) => {
       <Title onClick={() => setDisplayed('filter')}>aden</Title>
       
       <Tab onClick={() => toggleShowLoginUI(!showLoginUI)} >
-        {Object.keys(userSelector).length === 0 ? 'log in' : userSelector._doc.name}
+        {Object.keys(user).length === 0 ? 'log in' : user._doc.name}
       </Tab>
 
       {showLoginUI ? <LoginUI setDisplayed={setDisplayed} getProfile={getProfile} /> : null}

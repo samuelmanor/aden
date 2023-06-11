@@ -56,12 +56,12 @@ const Form = styled.form`
   }
 `
 
-const CommentsContainer = ({ arr, listingId, user }) => {
+const CommentsContainer = ({ arr, listingId }) => {
   const [content, setContent] = useState('');
-  const [comments, setComments] = useState(arr);
 
   const dispatch = useDispatch();
   const commentsSelector = useSelector(state => state.comments);
+  const userSelector = useSelector(state => state.users.currentUser);
 
   useEffect(() => {
     dispatch(initializeComments(arr));
@@ -70,12 +70,12 @@ const CommentsContainer = ({ arr, listingId, user }) => {
   const postComment = async (e) => {
     e.preventDefault();
 
-    dispatch(createComment(user.token, { listingId, content }))
+    dispatch(createComment(userSelector.token, { listingId, content }))
 
     setContent('');
   };
 
-  const commentArr = commentsSelector.map(c => <Comment key={c.id} comment={c} user={user} listingId={listingId} />);
+  const commentArr = commentsSelector.map(c => <Comment key={c.id} comment={c} listingId={listingId} />);
   
   const postForm = <Form onSubmit={postComment}>
     <p>add a comment</p>
@@ -89,10 +89,9 @@ const CommentsContainer = ({ arr, listingId, user }) => {
     <Container>
       <Title>{commentsSelector.length} Comment{commentsSelector.length === 1 ? '' : 's'}</Title>
 
-      <button onClick={() => console.log(commentsSelector)}>cl</button>
       {commentArr}
 
-      {user !== null ? postForm : <p id='comment-notif'>you must be logged in to add a comment.</p>}
+      {Object.keys(userSelector).length !== 0 ? postForm : <p id='comment-notif'>you must be logged in to add a comment.</p>}
     </Container>
   )
 }

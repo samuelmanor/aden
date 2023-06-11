@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { editComment, deleteComment } from "../reducers/commentReducer";
 
 const CommentStatic = styled.div`
@@ -71,24 +71,23 @@ const EditButton = styled.button`
   }
 `
 
-const Comment = ({ comment, user, listingId }) => {
+const Comment = ({ comment, listingId }) => {
   const [editingState, setEditingState] = useState(false);
   const [content, setContent] = useState(comment.content);
 
-  const currentUser = user === null ? { _doc: '' } : user;
-
+  const userSelector = useSelector(state => state.users.currentUser);
   const dispatch = useDispatch();
 
   const updateComment = async (e) => {
     e.preventDefault();
     
-    dispatch(editComment(currentUser.token, comment.id, content));
+    dispatch(editComment(userSelector.token, comment.id, content));
 
     setEditingState(false);
   };
 
   const removeComment = async () => {
-    dispatch(deleteComment(currentUser.token, comment.id, listingId));
+    dispatch(deleteComment(userSelector.token, comment.id, listingId));
   };
 
   const staticComment = <CommentStatic>
@@ -97,9 +96,9 @@ const Comment = ({ comment, user, listingId }) => {
     <Content>{content}</Content>
 
     <ButtonContainer>
-      {comment.user.username === currentUser._doc.username ? <Button onClick={() => setEditingState(true)}>edit</Button> : null}
+      {comment.user.username === userSelector._doc.username ? <Button onClick={() => setEditingState(true)}>edit</Button> : null}
 
-      {comment.user.username === currentUser._doc.username ? <Button onClick={removeComment}>delete</Button> : null}
+      {comment.user.username === userSelector._doc.username ? <Button onClick={removeComment}>delete</Button> : null}
     </ButtonContainer>
   </CommentStatic>
 

@@ -51,17 +51,6 @@ const LoginUI = ({ setDisplayed, getProfile }) => {
     e.preventDefault();
 
     dispatch(login(username, password));
-    // try {
-    //   const user = await loginService.login({ username, password });
-
-    //   window.localStorage.setItem('loggedAdenUser', JSON.stringify(user));
-
-    //   setUser(user);
-    //   setUsername('');
-    //   setPassword('');
-    // } catch (exception) {
-    //   console.log(exception)
-    // }
   };
 
   const handleLogout = () => {

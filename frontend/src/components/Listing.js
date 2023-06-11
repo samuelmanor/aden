@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import CommentsContainer from "./CommentsContainer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteListing } from "../reducers/listingReducer";
 import { useState } from "react";
 
@@ -60,19 +60,18 @@ const Info = styled.p`
   font-size: 25px;
 `
 
-const Listing = ({ listing, toggleExpand, user, setDisplayed, getProfile }) => {
+const Listing = ({ listing, toggleExpand, getProfile }) => {
   const [showNotif, setShowNotif] = useState(false);
 
-  const currentUser = user === null ? { _doc: '' } : user;
-
   const dispatch = useDispatch();
+  const userSelector = useSelector(state => state.users.currentUser);
 
   if (!listing) {
     return null
   };
 
   const removeListing = async () => {
-    dispatch(deleteListing(currentUser.token, listing.id));
+    dispatch(deleteListing(userSelector.token, listing.id));
     
     setShowNotif(true);
   };
@@ -87,7 +86,7 @@ const Listing = ({ listing, toggleExpand, user, setDisplayed, getProfile }) => {
   const listingStatic = <div>
     <Container>
       <ButtonContainer>
-        {listing.user.username === currentUser._doc.username ? <Button onClick={removeListing}>delete</Button> : null}
+        {listing.user.username === userSelector._doc.username ? <Button onClick={removeListing}>delete</Button> : null}
 
         {closeBtn}
       </ButtonContainer>
@@ -106,7 +105,7 @@ const Listing = ({ listing, toggleExpand, user, setDisplayed, getProfile }) => {
 
     <User onClick={() => getProfile(listing.user.id)}>posted by {listing.user.name} - @{listing.user.username}</User>
 
-    <CommentsContainer arr={listing.comments} listingId={listing.id} user={user} />
+    <CommentsContainer arr={listing.comments} listingId={listing.id} />
   </div>
 
   return (

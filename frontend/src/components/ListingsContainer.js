@@ -102,7 +102,7 @@ const ListingsContainer = ({ setDisplayed, getProfile }) => {
     <div>
       <SearchHeader selected={selected} />
 
-      <Listing listing={selected} toggleExpand={() => setSelected(null)} user={user} setDisplayed={setDisplayed} getProfile={getProfile} />
+      <Listing listing={selected} toggleExpand={() => setSelected(null)} getProfile={getProfile} />
 
       <Container ref={containerRef} style={{ display: selected ? 'none' : '' }}>
           {listings.length === 0 ? apology : smallListings}

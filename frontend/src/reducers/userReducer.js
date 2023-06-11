@@ -18,7 +18,7 @@ const userSlice = createSlice({
     logoutUser(state, action) {
       return {
         ...state,
-        currentUser: {}
+        currentUser: action.payload
       }
     },
     setSelectedUser(state, action) {
@@ -26,20 +26,21 @@ const userSlice = createSlice({
         ...state,
         selectedUser: action.payload
       }
-    },
-    addUser(state, action) {
-      // state.push(action.payload);
     }
   }
 });
 
-export const { loginUser, setSelectedUser, addUser } = userSlice.actions;
+export const { loginUser, logoutUser, setSelectedUser } = userSlice.actions;
 
-export const setCurrent = (current) => {
+export const getCurrent = () => {
   return async dispatch => {
-    dispatch(loginUser(current));
+    const loggedUserJSON = window.localStorage.getItem('loggedAdenUser');
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      dispatch(loginUser(user));
+    }
   }
-}
+};
 
 export const login = (username, password) => {
   return async dispatch => {
@@ -51,20 +52,16 @@ export const login = (username, password) => {
 };
 
 export const logout = () => {
-
+  return async dispatch => {
+    window.localStorage.removeItem('loggedAdenUser');
+    dispatch(logoutUser({}));
+  }
 }
 
 export const selectUser = (id) => {
   return async dispatch => {
     const user = await userService.read(id);
     dispatch(setSelectedUser(user));
-  }
-};
-
-export const createUser = obj => {
-  return async dispatch => {
-    const newUser = await userService.create(obj);
-    dispatch(addUser(newUser));
   }
 };
 

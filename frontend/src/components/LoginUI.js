@@ -3,7 +3,7 @@ import styled from "styled-components";
 import loginService from '../services/login';
 import listingService from '../services/listings';
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../reducers/userReducer";
+import { login, logout } from "../reducers/userReducer";
 
 const Container = styled.div`
   position: absolute;
@@ -54,9 +54,11 @@ const LoginUI = ({ setDisplayed, getProfile }) => {
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedAdenUser');
+    dispatch(logout());
+
     setDisplayed('filter');
-    // setUser(null);
+    setUsername('');
+    setPassword('');
   };
 
   const loginForm = (

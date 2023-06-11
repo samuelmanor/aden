@@ -10,7 +10,7 @@ import listingService from './services/listings';
 import './App.css'
 import ProfileAny from './components/ProfileAny';
 import { useDispatch } from 'react-redux';
-import { setCurrent } from './reducers/userReducer';
+import { getCurrent, testMe } from './reducers/userReducer';
 
 const App = () => {
   const [displayed, setDisplayed] = useState('filter');
@@ -19,11 +19,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedAdenUser');
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      dispatch(setCurrent(user));
-    }
+    dispatch(getCurrent());
   }, []);
 
   const getProfile = (id) => {

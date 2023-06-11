@@ -64,14 +64,14 @@ const Listing = ({ listing, toggleExpand, getProfile }) => {
   const [showNotif, setShowNotif] = useState(false);
 
   const dispatch = useDispatch();
-  const userSelector = useSelector(state => state.users.currentUser);
+  const user = useSelector(state => state.users.currentUser);
 
   if (!listing) {
     return null
   };
 
   const removeListing = async () => {
-    dispatch(deleteListing(userSelector.token, listing.id));
+    dispatch(deleteListing(user.token, listing.id));
     
     setShowNotif(true);
   };
@@ -86,7 +86,7 @@ const Listing = ({ listing, toggleExpand, getProfile }) => {
   const listingStatic = <div>
     <Container>
       <ButtonContainer>
-        {listing.user.username === userSelector._doc.username ? <Button onClick={removeListing}>delete</Button> : null}
+        {listing.user.username === user._doc.username ? <Button onClick={removeListing}>delete</Button> : null}
 
         {closeBtn}
       </ButtonContainer>

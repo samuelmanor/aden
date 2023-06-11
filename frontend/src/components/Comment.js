@@ -75,19 +75,19 @@ const Comment = ({ comment, listingId }) => {
   const [editingState, setEditingState] = useState(false);
   const [content, setContent] = useState(comment.content);
 
-  const userSelector = useSelector(state => state.users.currentUser);
+  const user = useSelector(state => state.users.currentUser);
   const dispatch = useDispatch();
 
   const updateComment = async (e) => {
     e.preventDefault();
     
-    dispatch(editComment(userSelector.token, comment.id, content));
+    dispatch(editComment(user.token, comment.id, content));
 
     setEditingState(false);
   };
 
   const removeComment = async () => {
-    dispatch(deleteComment(userSelector.token, comment.id, listingId));
+    dispatch(deleteComment(user.token, comment.id, listingId));
   };
 
   const staticComment = <CommentStatic>
@@ -96,9 +96,9 @@ const Comment = ({ comment, listingId }) => {
     <Content>{content}</Content>
 
     <ButtonContainer>
-      {comment.user.username === userSelector._doc.username ? <Button onClick={() => setEditingState(true)}>edit</Button> : null}
+      {comment.user.username === user._doc.username ? <Button onClick={() => setEditingState(true)}>edit</Button> : null}
 
-      {comment.user.username === userSelector._doc.username ? <Button onClick={removeComment}>delete</Button> : null}
+      {comment.user.username === user._doc.username ? <Button onClick={removeComment}>delete</Button> : null}
     </ButtonContainer>
   </CommentStatic>
 

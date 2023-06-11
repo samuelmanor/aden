@@ -1,7 +1,5 @@
 import { useState } from "react";
 import styled from "styled-components";
-import loginService from '../services/login';
-import listingService from '../services/listings';
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../reducers/userReducer";
 
@@ -45,7 +43,7 @@ const LoginUI = ({ setDisplayed, getProfile }) => {
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
-  const userSelector = useSelector(state => state.users.currentUser);
+  const user = useSelector(state => state.users.currentUser);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -75,14 +73,14 @@ const LoginUI = ({ setDisplayed, getProfile }) => {
 
   const profileForm = (
     <div>
-      <p onClick={() => getProfile(userSelector._doc._id)}>profile</p>
+      <p onClick={() => getProfile(user._doc._id)}>profile</p>
       <p onClick={handleLogout}>log out</p>
     </div>
   );
 
   return (
     <Container>
-      {Object.keys(userSelector).length === 0 ? loginForm : profileForm}
+      {Object.keys(user).length === 0 ? loginForm : profileForm}
     </Container>
   )
 }

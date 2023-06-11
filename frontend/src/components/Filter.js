@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFilters, getListings } from '../reducers/listingReducer';
-import listingService from '../services/listings';
 import Dropdown from './Dropdown';
 import styled from "styled-components";
 

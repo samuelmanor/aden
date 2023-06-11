@@ -37,7 +37,7 @@ export const getFilters = () => {
   return async dispatch => {
     const filters = await listingService.getFilters();
     dispatch(setFilters(filters));
-    return filters;
+    return filters; // del
   };
 };
 
@@ -68,7 +68,7 @@ export const deleteListing = (token, id) => {
     listingService.setToken(token);
 
     await listingService.remove(id);
-  }
-}
+  };
+};
 
 export default listingSlice.reducer;

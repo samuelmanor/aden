@@ -59,7 +59,7 @@ usersRouter.put('/:id', async (req, res, next) => {
 	const queryingUser = await User.findById(decodedToken.id);
 
 	if (userToChange.id !== queryingUser.id) {
-		return res.status(401).json({ error: 'unauthorized user' });
+		return res.status(401).json({ error: 'unauthorized user' }); // these ids might have to become _id? and on other files
 	}
 
 	User.findByIdAndUpdate(req.params.id, body, { new: true })

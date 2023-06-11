@@ -23,22 +23,6 @@ const App = () => {
     }
   }, [setUser]);
 
-  useEffect(() => {
-    console.log(`
-      things to do:
-        - add redux
-          - user create/delete
-        - get rid of obsolete import statements
-        - react component tests
-        - styling
-          - new listing
-          - returned listings
-          - profile
-        - add cypress
-        - add react router?
-    `)
-  }, []);
-
   const getProfile = (id) => {
     setProfileId(id);
     setDisplayed('profile');
@@ -48,11 +32,11 @@ const App = () => {
     if (displayed === 'filter') {
       return <Filter setDisplayed={setDisplayed} />
     } else if (displayed === 'profile') {
-      return <ProfileAny user={user} id={profileId} />
+      return <ProfileAny user={user} id={profileId} /> // should get user from state instead?
     } else if (displayed === 'listings') {
-      return <ListingsContainer setDisplayed={setDisplayed} user={user} getProfile={getProfile} />
+      return <ListingsContainer setDisplayed={setDisplayed} user={user} getProfile={getProfile} /> // should get user from redux state?
     } else if (displayed === 'new') {
-      return <NewListing user={user} setDisplayed={setDisplayed} />
+      return <NewListing user={user} setDisplayed={setDisplayed} /> // should get user from redux state?
     }
   };
 

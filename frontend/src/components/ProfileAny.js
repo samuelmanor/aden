@@ -6,7 +6,7 @@ const ProfileAny = ({ user, id }) => {
   const dispatch = useDispatch();
   const selectedUser = useSelector(state => state.users.selectedUser);
 
-  const currentUser = user === null ? { _doc: '' } : user;
+  const currentUser = user === null ? { _doc: '' } : user; // get user from state instead?
 
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
@@ -30,6 +30,7 @@ const ProfileAny = ({ user, id }) => {
   };
 
   const profileStatic = <div>
+    <button onClick={() => console.log(currentUser, selectedUser)}>cl</button>
     {currentUser._doc._id === selectedUser.id ? <button onClick={() => toggleEditingState(true)}>edit</button> : null}
 
     <p>{selectedUser.name}</p>

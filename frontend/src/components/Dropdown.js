@@ -24,7 +24,7 @@ const Options = styled.div`
   overflow: scroll;
   cursor: pointer;
   position: absolute;
-  right: 8em;
+  right: 12em;
   margin-top: 4.04em;
   border: 2px solid rgb(247, 247, 242);
 `
@@ -53,7 +53,7 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
   }, [])
 
   useEffect(() => {
-    setDropdownWidth(filter.current.offsetWidth - labelWidth - 280);
+    setDropdownWidth(filter.current.offsetWidth - labelWidth - 300);
   }, [filter, labelWidth])
 
   if (!arr) {
@@ -78,7 +78,7 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
 
       <Current style={{ width: dropdownWidth}} onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</Current>
 
-      <Options style={{ width: dropdownWidth + 10, display: show ? '' : 'none' }}>
+      <Options style={{ width: dropdownWidth, display: show ? '' : 'none' }}>
         {options}
       </Options>
 

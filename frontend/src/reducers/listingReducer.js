@@ -14,7 +14,7 @@ const listingSlice = createSlice({
         ...state,
         query: action.payload.filters,
         listings: action.payload.listings
-      };
+      }
     },
     setFilters(state, action) {
       return {
@@ -23,10 +23,19 @@ const listingSlice = createSlice({
       }
     },
     appendListing(state,action) {
-      state.push(action.payload);
+      // state.push(action.payload);
+      const updatedListings = [ ...state.listings, action.payload ];
+      return {
+        ...state,
+        listings: updatedListings
+      }
     },
     removeListing(state, action) {
-      // return state.map(l =>)
+      const updatedListings = state.listings.filter(l => l.id !== action.payload);
+      return {
+        ...state,
+        listings: updatedListings
+      }
     }
   }
 });
@@ -43,8 +52,6 @@ export const getFilters = () => {
 
 export const getListings = filters => {
   return async dispatch => {
-    // const listings = await listingService.search(filters);
-    // dispatch(setListings({ filters, listings }));
     try {
       const listings = await listingService.search(filters);
       dispatch(setListings({ filters, listings }));
@@ -68,6 +75,7 @@ export const deleteListing = (token, id) => {
     listingService.setToken(token);
 
     await listingService.remove(id);
+    dispatch(removeListing(id));
   };
 };
 

@@ -75,20 +75,21 @@ const Listing = ({ listing, toggleExpand, user, setDisplayed, getProfile }) => {
     dispatch(deleteListing(currentUser.token, listing.id));
     
     setShowNotif(true);
-
-    setTimeout(() => {
-      setDisplayed('filter');
-    }, 8000);
   };
 
-  const notif = <p>listing deleted!</p>;
+  const closeBtn = <Button onClick={toggleExpand}>close</Button>
+
+  const notif = <div>
+    listing deleted!
+    {closeBtn}
+  </div>
 
   const listingStatic = <div>
     <Container>
       <ButtonContainer>
         {listing.user.username === currentUser._doc.username ? <Button onClick={removeListing}>delete</Button> : null}
 
-        <Button onClick={toggleExpand}>close</Button>
+        {closeBtn}
       </ButtonContainer>
 
       <Address>{listing.address}</Address>

@@ -65,12 +65,13 @@ const ReturnButton = styled.button`
   cursor: pointer;
 `
 
-const ListingsContainer = ({ setDisplayed, user, getProfile }) => {
+const ListingsContainer = ({ setDisplayed, getProfile }) => {
   const [selected, setSelected] = useState(null);
 
   const containerRef = useRef();
 
   const listings = useSelector(state => state.listings.listings);
+  const user = useSelector(state => state.users.currentUser);
 
   const expandListing = (listing) => {
     setSelected(listing);

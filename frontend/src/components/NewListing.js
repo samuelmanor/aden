@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import listingService from '../services/listings';
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createListing } from "../reducers/listingReducer";
 
 const Message = styled.p`
@@ -15,7 +15,10 @@ const Option = styled.div`
   cursor: pointer;
 `
 
-const NewListing = ({ user, setDisplayed }) => {
+const NewListing = ({ setDisplayed }) => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.users.currentUser);
+  
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
@@ -28,8 +31,6 @@ const NewListing = ({ user, setDisplayed }) => {
   const [options, setOptions] = useState(null);
   const [notif, setNotif] = useState('you must be logged in to add a post.');
   const [showMessage, toggleShowMessage] = useState(user === null ? true : false);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     listingService

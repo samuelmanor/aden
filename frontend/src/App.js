@@ -9,19 +9,22 @@ import NewListing from './components/NewListing';
 import listingService from './services/listings';
 import './App.css'
 import ProfileAny from './components/ProfileAny';
+import { useDispatch } from 'react-redux';
+import { setCurrent } from './reducers/userReducer';
 
 const App = () => {
   const [displayed, setDisplayed] = useState('filter');
-  const [user, setUser] = useState(null);
   const [profileId, setProfileId] = useState('');
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedAdenUser');
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      dispatch(setCurrent(user));
     }
-  }, [setUser]);
+  }, []);
 
   const getProfile = (id) => {
     setProfileId(id);
@@ -32,17 +35,17 @@ const App = () => {
     if (displayed === 'filter') {
       return <Filter setDisplayed={setDisplayed} />
     } else if (displayed === 'profile') {
-      return <ProfileAny user={user} id={profileId} /> // should get user from state instead?
+      return <ProfileAny id={profileId} />
     } else if (displayed === 'listings') {
-      return <ListingsContainer setDisplayed={setDisplayed} user={user} getProfile={getProfile} /> // should get user from redux state?
+      return <ListingsContainer setDisplayed={setDisplayed} getProfile={getProfile} />
     } else if (displayed === 'new') {
-      return <NewListing user={user} setDisplayed={setDisplayed} /> // should get user from redux state?
+      return <NewListing setDisplayed={setDisplayed} />
     }
   };
 
   return (
     <div>
-      <Header setDisplayed={setDisplayed} user={user} setUser={setUser} getProfile={getProfile}  />
+      <Header setDisplayed={setDisplayed} getProfile={getProfile}  />
 
       <MainContainer>
         {toggleMain()}

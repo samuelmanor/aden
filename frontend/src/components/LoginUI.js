@@ -2,6 +2,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import loginService from '../services/login';
 import listingService from '../services/listings';
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../reducers/userReducer";
 
 const Container = styled.div`
   position: absolute;
@@ -38,30 +40,34 @@ const Button = styled.button`
   cursor: pointer;
 `
 
-const LoginUI = ({ user, setUser, setDisplayed, getProfile }) => {
+const LoginUI = ({ setDisplayed, getProfile }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const dispatch = useDispatch();
+  const userSelector = useSelector(state => state.users.currentUser);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    try {
-      const user = await loginService.login({ username, password });
+    dispatch(login(username, password));
+    // try {
+    //   const user = await loginService.login({ username, password });
 
-      window.localStorage.setItem('loggedAdenUser', JSON.stringify(user));
+    //   window.localStorage.setItem('loggedAdenUser', JSON.stringify(user));
 
-      setUser(user);
-      setUsername('');
-      setPassword('');
-    } catch (exception) {
-      console.log(exception)
-    }
+    //   setUser(user);
+    //   setUsername('');
+    //   setPassword('');
+    // } catch (exception) {
+    //   console.log(exception)
+    // }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedAdenUser');
     setDisplayed('filter');
-    setUser(null);
+    // setUser(null);
   };
 
   const loginForm = (
@@ -78,14 +84,14 @@ const LoginUI = ({ user, setUser, setDisplayed, getProfile }) => {
 
   const profileForm = (
     <div>
-      <p onClick={() => getProfile(user._doc._id)}>profile</p>
+      <p onClick={() => getProfile(userSelector._doc._id)}>profile</p>
       <p onClick={handleLogout}>log out</p>
     </div>
   );
 
   return (
     <Container>
-      {user === null ? loginForm : profileForm}
+      {Object.keys(userSelector).length === 0 ? loginForm : profileForm}
     </Container>
   )
 }

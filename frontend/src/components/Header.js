@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import LoginUI from "./LoginUI";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   display: flex;
@@ -29,8 +30,10 @@ const Tab = styled.p`
   cursor: pointer;
 `
 
-const Header = ({ setDisplayed, user, setUser, getProfile }) => {
+const Header = ({ setDisplayed, getProfile }) => {
   const [showLoginUI, toggleShowLoginUI] = useState(false);
+
+  const userSelector = useSelector(state => state.users.currentUser);
 
   return (
     <Container>
@@ -39,10 +42,10 @@ const Header = ({ setDisplayed, user, setUser, getProfile }) => {
       <Title onClick={() => setDisplayed('filter')}>aden</Title>
       
       <Tab onClick={() => toggleShowLoginUI(!showLoginUI)} >
-        {user === null ? 'log in' : user._doc.name}
+        {Object.keys(userSelector).length === 0 ? 'log in' : userSelector._doc.name}
       </Tab>
 
-      {showLoginUI ? <LoginUI user={user} setUser={setUser} setDisplayed={setDisplayed} getProfile={getProfile} /> : null}
+      {showLoginUI ? <LoginUI setDisplayed={setDisplayed} getProfile={getProfile} /> : null}
     </Container>
   )
 }

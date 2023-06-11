@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import userService from '../services/users';
+import loginService from '../services/login';
 
 const userSlice = createSlice({
   name: 'users',
@@ -8,10 +9,16 @@ const userSlice = createSlice({
     selectedUser: {}
   },
   reducers: {
-    loginUser(state, action) { // <- for logging in
+    loginUser(state, action) {
       return {
         ...state,
         currentUser: action.payload
+      }
+    },
+    logoutUser(state, action) {
+      return {
+        ...state,
+        currentUser: {}
       }
     },
     setSelectedUser(state, action) {
@@ -28,8 +35,23 @@ const userSlice = createSlice({
 
 export const { loginUser, setSelectedUser, addUser } = userSlice.actions;
 
-export const login = () => {
-  // for logging in
+export const setCurrent = (current) => {
+  return async dispatch => {
+    dispatch(loginUser(current));
+  }
+}
+
+export const login = (username, password) => {
+  return async dispatch => {
+    const user = await loginService.login({ username, password });
+    window.localStorage.setItem('loggedAdenUser', JSON.stringify(user));
+
+    dispatch(loginUser(user));
+  }
+};
+
+export const logout = () => {
+
 }
 
 export const selectUser = (id) => {

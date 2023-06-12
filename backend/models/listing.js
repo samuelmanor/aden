@@ -19,9 +19,18 @@ const listingSchema = new mongoose.Schema({
 			ref: 'Comment'
 		}
 	],
-	identity: String,
-	service: String,
-	location: String
+	identity: {
+		type: String,
+		required: true
+	},
+	service: {
+		type: String,
+		required: true
+	},
+	location: {
+		type: String,
+		required: true
+	}
 });
 
 listingSchema.set('toJSON', {

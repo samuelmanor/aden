@@ -1,22 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
-import styled from "styled-components";
+import { useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const Container = styled.div`
   user-select: none;
   display: flex;
   font-size: 60px;
   margin-bottom: -0.2em;
-`
+`;
 
 const Label = styled.p`
   margin-right: 1em;
   margin-left: 2em;
-`
+`;
 
 const Current = styled.p`
   border-bottom: 2px solid rgb(247, 247, 242);
   cursor: pointer;
-`
+`;
 
 const Options = styled.div`
   font-size: 30px;
@@ -27,7 +27,7 @@ const Options = styled.div`
   right: 12em;
   margin-top: 4.04em;
   border: 2px solid rgb(247, 247, 242);
-`
+`;
 
 const Element = styled.p`
   user-select: none;
@@ -37,7 +37,7 @@ const Element = styled.p`
   &:hover {
     background-color: rgba(247, 247, 242, 0.2);
   }
-`
+`;
 
 const Dropdown = ({ placeholder, label, arr, select, filter }) => {
   const [show, setShow] = useState(false);
@@ -49,11 +49,11 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
     if (node !== null) {
       setLabelWidth(node.getBoundingClientRect().width);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     setDropdownWidth(filter.current.offsetWidth - labelWidth - 300);
-  }, [filter, labelWidth])
+  }, [filter, labelWidth]);
 
   if (!arr) {
     return null;
@@ -65,7 +65,7 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
     setShow(false);
   };
 
-  const options = arr.map(o => 
+  const options = arr.map(o =>
     <Element key={o} style={{ display: show ? '' : 'none' }} onClick={(e) => selectOption(e.target.innerText)}>
       {o}
     </Element>
@@ -75,14 +75,14 @@ const Dropdown = ({ placeholder, label, arr, select, filter }) => {
     <Container>
       <Label ref={labelRef} id={label} >{label}</Label>
 
-      <Current style={{ width: dropdownWidth}} onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</Current>
+      <Current style={{ width: dropdownWidth }} onClick={() => setShow(!show)}>{selectedText ? selectedText : placeholder}</Current>
 
       <Options style={{ width: dropdownWidth, display: show ? '' : 'none' }}>
         {options}
       </Options>
 
     </Container>
-  )
+  );
 };
 
 export default Dropdown;

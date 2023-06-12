@@ -1,24 +1,24 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import listingService from '../services/listings';
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { createListing } from "../reducers/listingReducer";
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createListing } from '../reducers/listingReducer';
 
 const Message = styled.p`
   font-size: 30px;
   text-align: center;
   padding-top: 8em;
-`
+`;
 
 const Option = styled.div`
   border: 1px solid ${props => props.$selected};
   cursor: pointer;
-`
+`;
 
 const NewListing = ({ setDisplayed }) => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.users.currentUser);
-  
+
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
@@ -40,7 +40,7 @@ const NewListing = ({ setDisplayed }) => {
           identities: mapOptions(['transmasc', 'transfem', 'both'], identity, setIdentity),
           services: mapOptions(returnedFilters.services, service, setService),
           locations: mapOptions(returnedFilters.locations, location, setLocation)
-        })
+        });
       });
   });
 
@@ -70,16 +70,16 @@ const NewListing = ({ setDisplayed }) => {
   };
 
   const mapOptions = (options, type, set) => {
-    return options.map(o => <div>
+    return options.map(o => <div key={`${o}${type}`}>
       <Option
-        onClick={() => set(o)} 
+        onClick={() => set(o)}
         $selected={type === o ? 'white' : 'transparent'}>
         {o}
       </Option>
-    </div>)
+    </div>);
   };
 
-  const form = 
+  const form =
     <form onSubmit={postListing}>
       <p>title/name:</p>
       <input value={name} onChange={(e) => setName(e.target.value)} />
@@ -106,15 +106,15 @@ const NewListing = ({ setDisplayed }) => {
       {options ? options.locations : null}
 
       <button type='submit'>post</button>
-    </form>
+    </form>;
 
-  const message = <Message>{notif}</Message>
+  const message = <Message>{notif}</Message>;
 
   return (
     <div>
       {showMessage ? message : form}
     </div>
-  )
-}
+  );
+};
 
 export default NewListing;

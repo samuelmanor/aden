@@ -1,7 +1,7 @@
-import { useState } from "react";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { login, logout } from "../reducers/userReducer";
+import { useState } from 'react';
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, logout } from '../reducers/userReducer';
 
 const Container = styled.div`
   position: absolute;
@@ -17,7 +17,7 @@ const Container = styled.div`
   height: 7em;
   text-align: center;
   z-index: 1;
-`
+`;
 
 const Input = styled.input`
   background-color: transparent;
@@ -26,7 +26,7 @@ const Input = styled.input`
   display: block;
   margin: 0.5em auto 0.5em auto;
   font-size: 18px;
-`
+`;
 
 const Button = styled.button`
   background-color: transparent;
@@ -36,7 +36,7 @@ const Button = styled.button`
   display: block;
   margin: 0 auto;
   cursor: pointer;
-`
+`;
 
 const LoginUI = ({ setDisplayed, getProfile }) => {
   const [username, setUsername] = useState('');
@@ -82,7 +82,7 @@ const LoginUI = ({ setDisplayed, getProfile }) => {
     <Container>
       {Object.keys(user).length === 0 ? loginForm : profileForm}
     </Container>
-  )
-}
+  );
+};
 
 export default LoginUI;

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFilters, getListings } from '../reducers/listingReducer';
 import Dropdown from './Dropdown';
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const Button = styled.button`
   background-color: transparent;
@@ -16,7 +16,7 @@ const Button = styled.button`
   &:hover {
     background-color: rgba(247, 247, 242, 0.2);
   }
-`
+`;
 
 const Filter = ({ setDisplayed }) => {
   const dispatch = useDispatch();
@@ -56,7 +56,7 @@ const Filter = ({ setDisplayed }) => {
         { activeQuery ? <Button onClick={search}>search</Button> : null }
       </div>
     </div>
-  )
+  );
 };
 
 export default Filter;

@@ -26,7 +26,7 @@ export const { setComments, addComment, updateComment, removeComment } = comment
 export const initializeComments = (arr) => {
   return async dispatch => {
     dispatch(setComments(arr));
-  }
+  };
 };
 
 export const createComment = (token, obj) => {
@@ -35,7 +35,7 @@ export const createComment = (token, obj) => {
 
     const newComment = await commentService.create(obj);
     dispatch(addComment(newComment));
-  }
+  };
 };
 
 export const editComment = (token, id, content) => {
@@ -44,7 +44,7 @@ export const editComment = (token, id, content) => {
 
     const updatedComment = await commentService.update(id, { content });
     dispatch(updateComment(updatedComment));
-  }
+  };
 };
 
 export const deleteComment = (token, id, listingId) => {
@@ -53,7 +53,7 @@ export const deleteComment = (token, id, listingId) => {
 
     await commentService.remove(id, listingId);
     dispatch(removeComment(id));
-  }
-}
+  };
+};
 
 export default commentSlice.reducer;

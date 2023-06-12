@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { editUser, selectUser } from "../reducers/userReducer";
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { editUser, selectUser } from '../reducers/userReducer';
 
 const ProfileAny = ({ id }) => {
   const dispatch = useDispatch();
@@ -10,7 +10,7 @@ const ProfileAny = ({ id }) => {
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
   const [editingState, toggleEditingState] = useState(false);
-  
+
   useEffect(() => {
     dispatch(selectUser(id));
   }, [dispatch, id]);
@@ -34,7 +34,7 @@ const ProfileAny = ({ id }) => {
     <p>{selectedUser.name}</p>
     <p>@{selectedUser.username}</p>
     <p>{selectedUser.bio}</p>
-  </div>
+  </div>;
 
   const editForm = <form onSubmit={updateUser}>
     name:
@@ -46,13 +46,13 @@ const ProfileAny = ({ id }) => {
     <input value={bio} onChange={(e) => setBio(e.target.value)} />
 
     <button type='submit'>save</button>
-  </form>
+  </form>;
 
   return (
     <div>
       {editingState ? editForm : profile}
     </div>
-  )
+  );
 };
 
 export default ProfileAny;

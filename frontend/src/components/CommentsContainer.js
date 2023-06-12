@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import Comment from "./Comment";
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import Comment from './Comment';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { createComment, initializeComments } from "../reducers/commentReducer";
+import { createComment, initializeComments } from '../reducers/commentReducer';
 
 const Container = styled.div`
   // background-color: red;
@@ -16,14 +16,14 @@ const Container = styled.div`
     text-align: center;
     padding-top: 1em;
   }
-`
+`;
 
 const Title = styled.p`
   font-size: 35px;
   text-align: center;
   // color: black;
   // border-bottom: 1px solid black;
-`
+`;
 
 const Form = styled.form`
   color: black;
@@ -53,7 +53,7 @@ const Form = styled.form`
       background-color: rgba(0, 0, 0, 0.1);
     }
   }
-`
+`;
 
 const CommentsContainer = ({ arr, listingId }) => {
   const [content, setContent] = useState('');
@@ -64,25 +64,25 @@ const CommentsContainer = ({ arr, listingId }) => {
 
   useEffect(() => {
     dispatch(initializeComments(arr));
-  }, [dispatch])
+  }, [dispatch]);
 
   const postComment = async (e) => {
     e.preventDefault();
 
-    dispatch(createComment(user.token, { listingId, content }))
+    dispatch(createComment(user.token, { listingId, content }));
 
     setContent('');
   };
 
   const commentArr = comments.map(c => <Comment key={c.id} comment={c} listingId={listingId} />);
-  
+
   const postForm = <Form onSubmit={postComment}>
     <p>add a comment</p>
 
     <input type='text' value={content} onChange={({ target }) => setContent(target.value)} />
 
     <button type='submit'>post</button>
-  </Form>
+  </Form>;
 
   return (
     <Container>
@@ -92,7 +92,7 @@ const CommentsContainer = ({ arr, listingId }) => {
 
       {Object.keys(user).length !== 0 ? postForm : <p id='comment-notif'>you must be logged in to add a comment.</p>}
     </Container>
-  )
-}
+  );
+};
 
 export default CommentsContainer;

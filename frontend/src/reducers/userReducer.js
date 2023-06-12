@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 import userService from '../services/users';
 import loginService from '../services/login';
 
@@ -13,19 +13,19 @@ const userSlice = createSlice({
       return {
         ...state,
         currentUser: action.payload
-      }
+      };
     },
     logoutUser(state, action) {
       return {
         ...state,
         currentUser: action.payload
-      }
+      };
     },
     setSelectedUser(state, action) {
       return {
         ...state,
         selectedUser: action.payload
-      }
+      };
     }
   }
 });
@@ -39,7 +39,7 @@ export const getCurrent = () => {
       const user = JSON.parse(loggedUserJSON);
       dispatch(loginUser(user));
     }
-  }
+  };
 };
 
 export const login = (username, password) => {
@@ -48,21 +48,21 @@ export const login = (username, password) => {
     window.localStorage.setItem('loggedAdenUser', JSON.stringify(user));
 
     dispatch(loginUser(user));
-  }
+  };
 };
 
 export const logout = () => {
   return async dispatch => {
     window.localStorage.removeItem('loggedAdenUser');
     dispatch(logoutUser({}));
-  }
-}
+  };
+};
 
 export const selectUser = (id) => {
   return async dispatch => {
     const user = await userService.read(id);
     dispatch(setSelectedUser(user));
-  }
+  };
 };
 
 export const editUser = (token, id, obj) => {
@@ -71,7 +71,7 @@ export const editUser = (token, id, obj) => {
 
     const updatedUser = await userService.update(id, obj);
     dispatch(setSelectedUser(updatedUser));
-  }
+  };
 };
 
 export default userSlice.reducer;

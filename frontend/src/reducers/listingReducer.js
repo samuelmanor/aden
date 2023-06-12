@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 import listingService from '../services/listings';
 
 const listingSlice = createSlice({
@@ -14,27 +14,27 @@ const listingSlice = createSlice({
         ...state,
         query: action.payload.filters,
         listings: action.payload.listings
-      }
+      };
     },
     setFilters(state, action) {
       return {
         ...state,
         filters: action.payload
-      }
+      };
     },
     appendListing(state,action) {
       const updatedListings = [ ...state.listings, action.payload ];
       return {
         ...state,
         listings: updatedListings
-      }
+      };
     },
     removeListing(state, action) {
       const updatedListings = state.listings.filter(l => l.id !== action.payload);
       return {
         ...state,
         listings: updatedListings
-      }
+      };
     }
   }
 });

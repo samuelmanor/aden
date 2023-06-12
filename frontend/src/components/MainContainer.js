@@ -6,14 +6,14 @@ const Container = styled.div`
   margin: 0 auto;
   font-family: 'Epilogue', sans-serif;
   color: #f7f7f2  
-`
+`;
 
 const MainContainer = (props) => {
   return (
     <Container className='gradient-bg'>
       {props.children}
     </Container>
-  )
+  );
 };
 
 export default MainContainer;

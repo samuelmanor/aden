@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import Listing from "./Listing";
-import SearchHeader from "./SearchHeader";
-import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import styled from 'styled-components';
+import Listing from './Listing';
+import SearchHeader from './SearchHeader';
+import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Container = styled.div`
   background-color: rgb(247, 247, 242);
@@ -12,7 +12,7 @@ const Container = styled.div`
   flex-wrap: wrap;
   justify-content: space-evenly;
   gap: 1em;
-`
+`;
 
 const SmallListing = styled.div`
   color: black;
@@ -20,7 +20,7 @@ const SmallListing = styled.div`
   width: 25em;
   padding: 1em;
   padding-top: 0;
-`
+`;
 
 const Name = styled.p`
   height: 2.5em;
@@ -28,31 +28,31 @@ const Name = styled.p`
   padding-bottom: 0;
   font-size: 28px;
   cursor: pointer;
-`
+`;
 
 const Address = styled.p`
   height: 2em;
   font-size: 18px;
   margin: 0;
-`
+`;
 
 const Description = styled.div`
   height: 150px;
   padding: 1em;
   text-align: justify;
-`
+`;
 
 const Info = styled.p`
   text-align: center;
   user-select: none;
-`
+`;
 
 const NoResults = styled.div`
   height: 18em;
   margin-top: 1em;
   color: black;
   font-size: 20px;
-`
+`;
 
 const ReturnButton = styled.button`
   background-color: transparent;
@@ -63,7 +63,7 @@ const ReturnButton = styled.button`
   margin: 0 auto;
   margin-top: 1em;
   cursor: pointer;
-`
+`;
 
 const ListingsContainer = ({ setDisplayed, getProfile }) => {
   const [selected, setSelected] = useState(null);
@@ -80,14 +80,14 @@ const ListingsContainer = ({ setDisplayed, getProfile }) => {
     }, 10);
   };
 
-  const apology = 
+  const apology =
     <NoResults>
       sorry, nothing found!
       {user !== null ? ' please make a post if you have something to add!' : ''}
       <ReturnButton onClick={() => setDisplayed('filter')}>back to search</ReturnButton>
-    </NoResults>
+    </NoResults>;
 
-  const smallListings = listings.map(l => 
+  const smallListings = listings.map(l =>
     <SmallListing key={l.id}>
       <Name onClick={() => expandListing(l)}>{l.name}</Name>
 
@@ -96,7 +96,7 @@ const ListingsContainer = ({ setDisplayed, getProfile }) => {
       <Description>{l.description.length > 350 ? `${l.description.substring(0, 350)}...` : l.description}</Description>
 
       <Info>{l.comments.length === 1 ? `${l.comments.length} comment` : `${l.comments.length} comments`}</Info>
-    </SmallListing>)
+    </SmallListing>);
 
   return (
     <div>
@@ -105,12 +105,12 @@ const ListingsContainer = ({ setDisplayed, getProfile }) => {
       <Listing listing={selected} toggleExpand={() => setSelected(null)} getProfile={getProfile} />
 
       <Container ref={containerRef} style={{ display: selected ? 'none' : '' }}>
-          {listings.length === 0 ? apology : smallListings}
+        {listings.length === 0 ? apology : smallListings}
       </Container>
 
       {selected ? null : <ReturnButton onClick={() => setDisplayed('filter')}>back to search</ReturnButton>}
     </div>
-  )
-}
+  );
+};
 
 export default ListingsContainer;
